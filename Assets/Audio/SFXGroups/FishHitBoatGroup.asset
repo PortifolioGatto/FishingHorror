@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de032172ed798e445bff170538bcc215, type: 3}
+  m_Name: FishHitBoatGroup
+  m_EditorClassIdentifier: Assembly-CSharp::SFXGroup
+  groupName: fishhitboat
+  audioClips:
+  - {fileID: 8300000, guid: 0e8f9aed77c2ce94c928bf53900bf3d6, type: 3}
+  - {fileID: 8300000, guid: 16429a7964869874eaff999f2a494fff, type: 3}
+  - {fileID: 8300000, guid: 55312471f120465459778e7e143cfdb4, type: 3}
+  - {fileID: 8300000, guid: a94a8d449de545242ad49cb270600136, type: 3}
+  - {fileID: 8300000, guid: 1c06e19f70d231e48b4018c0ebc93322, type: 3}
+  - {fileID: 8300000, guid: 0874473623f65c843ba937983f005f16, type: 3}
+  - {fileID: 8300000, guid: 73b5dcd28b4df7349a814121021ac538, type: 3}
+  - {fileID: 8300000, guid: e66ec8c65db74f94ca4846aa89f24b6e, type: 3}
+  - {fileID: 8300000, guid: a863a8030a9d8ac409fb7ad38f33a053, type: 3}
+  - {fileID: 8300000, guid: cb4a0bdc45eaff24e93dec1e06fb3922, type: 3}
