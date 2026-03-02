@@ -14,6 +14,8 @@ public class JumpingFish_EventController : EventController
     [SerializeField] private float boatRadiusInside = 2f;
     [SerializeField] private float timeToHitBoat = 2f;
 
+    private bool eventRunning = false;
+
     private void Start()
     {
         if(possibleFishes.Length == 0)
@@ -27,6 +29,9 @@ public class JumpingFish_EventController : EventController
 
     public void StartJumpingFishEvent()
     {
+        if (eventRunning) return;
+
+        eventRunning = true;
         StartCoroutine(DelayedStart());
     }
 
@@ -82,6 +87,11 @@ public class JumpingFish_EventController : EventController
     public override void EndEvent()
     {
 
+    }
+
+    public void ChanceChance(float newChance)
+    {
+        chanceToHappen = newChance;
     }
 
     private Vector3 CalculateForceToApply(Vector3 startPos, Vector3 endPos, float timeToHit)

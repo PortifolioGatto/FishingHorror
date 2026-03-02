@@ -10,7 +10,9 @@ public class DriveInteractable : MonoBehaviour, IInteractable
 
     public string GetInteractionText()
     {
-        if(PlayerBoatManager.Instance.holdingWheel)
+        if(!PlayerBoatManager.Instance.canDrive) return "";
+
+        if (PlayerBoatManager.Instance.holdingWheel)
         {
             return stopInteractionText;
         }

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerCamera : MonoBehaviour
+public class PlayerCamera : MonoBehaviour, IListenConfigChanged
 {
     public bool cameraEnabled = true;
 
@@ -13,6 +13,17 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField] private InputActionReference mouseDelta;
 
     [SerializeField] private Transform orientation;
+
+    [Space]
+
+    [SerializeField] private bool headBobEnabled = true;
+    [SerializeField] private float headBobFrequency = 1.5f;
+    [SerializeField] private float headBobAmplitude = 0.05f;
+    [SerializeField] private float headBobSmoothing = 5f;
+    
+    private Vector3 initialCameraPosition;
+    private float headBobOffset = 0f;
+    private float headBobTimer = 0f;
 
     public static Transform Orientation => Instance.orientation;
 
@@ -37,6 +48,9 @@ public class PlayerCamera : MonoBehaviour
     private void Start()
     {
         // Lock the cursor to the center of the screen and hide it
+
+        sensitivity = PlayerPrefs.GetFloat(ConfigsAreaInGame.PlayerPrefsSensitivityKey, 0.5f);
+
         instance = this;
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -44,6 +58,12 @@ public class PlayerCamera : MonoBehaviour
     private void Update()
     {
         if(!cameraEnabled) return;
+
+
+        HandleHeadBob();
+
+        
+
         Vector2 mouseDeltaValue = mouseDelta.action.ReadValue<Vector2>();
         float mouseX = mouseDeltaValue.x * sensitivity;
         float mouseY = mouseDeltaValue.y * sensitivity;
@@ -58,11 +78,31 @@ public class PlayerCamera : MonoBehaviour
 
     private void LateUpdate()
     {
-        transform.position = playerHeadPos.position;
+        transform.position = playerHeadPos.position + Vector3.up * headBobOffset;
+    }
+
+    private void HandleHeadBob()
+    {
+        if (!headBobEnabled) return;
+        if (PlayerMovement.Instance.IsMoving)
+        {
+            headBobTimer += Time.deltaTime * headBobFrequency;
+            headBobOffset = Mathf.Sin(headBobTimer) * headBobAmplitude;
+        }
+        else
+        {
+            headBobOffset = Mathf.Lerp(headBobOffset, 0f, Time.deltaTime * headBobSmoothing);
+            headBobTimer = 0f; // Reset timer when not moving
+        }
     }
 
     public void AddHorizontalRotation(float delta)
     {
         horizontalRotation += delta;
+    }
+
+    public void OnConfigChanged()
+    {
+        sensitivity = PlayerPrefs.GetFloat(ConfigsAreaInGame.PlayerPrefsSensitivityKey, 0.5f);
     }
 }

@@ -1,0 +1,115 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1064345769977820438
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8725516935075821609}
+  - component: {fileID: 1170616514788578704}
+  - component: {fileID: 6909341353780824767}
+  - component: {fileID: 5094118487123705301}
+  - component: {fileID: 8944898928533096231}
+  m_Layer: 0
+  m_Name: TheObserver
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8725516935075821609
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1064345769977820438}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.2570299, y: -0.6587379, z: -0.2570299, w: 0.6587379}
+  m_LocalPosition: {x: 237.1, y: -12.4, z: -281.2}
+  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: -42.63, y: -90, z: 0}
+--- !u!114 &1170616514788578704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1064345769977820438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b885c3c28717eba45a9db2f0d52c3d48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UnderwaterDecalEmitter
+  texture: {fileID: 2800000, guid: 798d63ba92385c34b9ec287bce3ed2a7, type: 3}
+  tintColor: {r: 1, g: 1, b: 1, a: 1}
+  opacity: 0.762
+  waterTintStrength: 0.565
+  extraDarken: 0
+  extraDesaturate: 0
+  autoDepthEffect: 0.5
+  waveDistortion: 0.015
+  distortionSpeed: 1
+  edgeFade: 0
+--- !u!114 &6909341353780824767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1064345769977820438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33c350bb8b57f944aab62b57c07f999a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  rotationOffset: {x: -90, y: 0, z: 0}
+--- !u!114 &5094118487123705301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1064345769977820438}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: deae6acf9f9f8c14b85d4df27a918ceb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  sightRange: 0.99
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 8
+  onCameraLookedAt:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8944898928533096231}
+        m_TargetAssemblyTypeName: DecalEmitterController, Assembly-CSharp
+        m_MethodName: TweenOpacity
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &8944898928533096231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1064345769977820438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83439040b76cc654393d253835f5eef7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'

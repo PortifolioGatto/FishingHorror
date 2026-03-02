@@ -7,6 +7,14 @@ using UnityEngine.InputSystem;
 
 public class PlayerFishingSystem : MonoBehaviour
 {
+    public bool fishingRodEquipped = false;
+
+    public void EquipFishingRod()
+    {
+        fishingRodEquipped = true;
+        SetVisible(true);
+    }
+
     [SerializeField] private float minCastForce = 2f;
     [SerializeField] private float maxCastForce = 10f;
     [SerializeField] private float minCastToThrow = 1f;
@@ -211,6 +219,11 @@ public class PlayerFishingSystem : MonoBehaviour
 
     public void SetVisible(bool visible)
     {
+        if(!fishingRodEquipped)
+        {
+            fishingRod.gameObject.SetActive(false);
+            return;
+        }
         fishingRod.gameObject.SetActive(visible);
     }
 
@@ -218,6 +231,9 @@ public class PlayerFishingSystem : MonoBehaviour
     private void OnThrowFishingRod(InputAction.CallbackContext context)
     {
         if(blocker.isBlocking) return;
+
+        if (fishingRodEquipped == false)
+            return;
 
         if (fishingRod.CurrentHookMode == HookMode.IDLE)
         {
@@ -249,6 +265,9 @@ public class PlayerFishingSystem : MonoBehaviour
 
     private void OnThrowFishingRodCanceled(InputAction.CallbackContext context)
     {
+        if (fishingRodEquipped == false)
+            return;
+
         isCharging = false;
     }
 

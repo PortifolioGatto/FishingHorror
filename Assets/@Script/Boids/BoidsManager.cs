@@ -3,6 +3,14 @@ using UnityEngine;
 
 public class BoidsManager : MonoBehaviour
 {
+    public bool enableSimulation = true;
+    public bool enableVisuals = true;
+    public bool enableGizmos = true;
+
+    public void ToggleSimulation() => enableSimulation = !enableSimulation;
+    public void ToggleVisuals() => enableVisuals = !enableVisuals;
+
+    [Space]
     public List<BoidSpecies> speciesList;
     public SpawnGroup[] spawnGroups;
 
@@ -48,6 +56,8 @@ public class BoidsManager : MonoBehaviour
 
     void SpawnBoids()
     {
+        GameObject container = new GameObject("Boid Visuals");
+
         int total = 0;
         foreach (var g in spawnGroups)
             total += g.count;
@@ -82,7 +92,7 @@ public class BoidsManager : MonoBehaviour
                     speciesIndex = speciesIndex
                 };
 
-                visuals[index] = Instantiate(species.prefab, pos, Quaternion.identity).transform;
+                visuals[index] = Instantiate(species.prefab, pos, Quaternion.identity, container.transform).transform;
 
                 index++;
             }
@@ -95,6 +105,9 @@ public class BoidsManager : MonoBehaviour
 
     void Simulate()
     {
+        if(!enableSimulation)
+            return;
+
         float deltaTime = Time.deltaTime;
 
         for (int i = 0; i < boids.Length; i++)
@@ -207,15 +220,31 @@ public class BoidsManager : MonoBehaviour
 
     void UpdateVisuals()
     {
+        if(!enableVisuals)
+        {
+            for (int i = 0; i < visuals.Length; i++)
+            {
+                if (visuals[i] != null)
+                    visuals[i].gameObject.SetActive(false);
+            }
+            return;
+        }
+
         for (int i = 0; i < visuals.Length; i++)
         {
+            if(visuals[i] == null)
+                continue;
+
+            if(!visuals[i].gameObject.activeSelf)
+                visuals[i].gameObject.SetActive(true);
+
             visuals[i].position = boids[i].position;
 
             if (boids[i].velocity.sqrMagnitude > 0.01f)
                 visuals[i].rotation = Quaternion.LookRotation(boids[i].velocity);
         }
     }
-
+    
     // =========================================================
     // SPATIAL HASH
     // =========================================================
@@ -273,7 +302,7 @@ public class BoidsManager : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        if (!enabled)
+        if (!enabled || !enableGizmos)
             return;
 
         Vector3 center = transform.position;

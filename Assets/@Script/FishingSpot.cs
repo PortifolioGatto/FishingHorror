@@ -107,6 +107,7 @@ public class FishingSpot : MonoBehaviour
         GameObject fish = Instantiate(data.fishPrefab, transform.position + Vector3.down * 5, Quaternion.identity);
 
         fish.GetComponent<WorldFish>().Initialize(data);
+        fish.GetComponent<WorldFish>().InitializeFishingSpot(this);
 
         StartCoroutine(VisualFishMovement(fish, data));
 
@@ -126,8 +127,16 @@ public class FishingSpot : MonoBehaviour
 
         float jumpChance = 0.33f;
 
-        while(Vector3.Distance(fish.transform.position, randomPoint) >= 1f)
+        while(fish == null) yield return null;
+
+        float dist = Vector3.Distance(fish.transform.position, randomPoint);
+
+        while (dist >= 1)
         {
+            if (fish == null) yield return null;
+
+            dist = Vector3.Distance(fish.transform.position, randomPoint);
+
             float t = Time.deltaTime / duration;
             Vector3 newPos = Vector3.Lerp(fish.transform.position, randomPoint, t);
             fish.transform.position = newPos;
@@ -171,16 +180,20 @@ public class FishingSpot : MonoBehaviour
                 targetRotation = Quaternion.LookRotation(direction, Vector3.up);
                 duration = Random.Range(3f, 6f);
 
-                if(fish == null) yield break;
+                float distance = Vector3.Distance(fish.transform.position, randomPoint);
+
+                if (fish == null) yield break;
 
 
-                while (Vector3.Distance(fish.transform.position, randomPoint) >= 1f)
+                while (distance >= 1f)
                 {
+                    if(fish == null) yield break;
                     float t = Time.deltaTime / duration;
                     Vector3 newPos = Vector3.Lerp(fish.transform.position, randomPoint, t);
                     fish.transform.position = newPos;
                     fish.transform.rotation = Quaternion.Slerp(fish.transform.rotation, targetRotation, t * 33f);
                     yield return null;
+                    distance = Vector3.Distance(fish.transform.position, randomPoint);
                 }
 
                 

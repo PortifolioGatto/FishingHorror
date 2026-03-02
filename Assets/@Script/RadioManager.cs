@@ -14,6 +14,9 @@ public class RadioManager : MonoBehaviour
     [Space]
     [SerializeField] private float typewriterSpeed = 0.05f;
 
+    [Header("Audio")]
+    [SerializeField] private AudioSource whiteNoise;
+
 
     public static RadioManager Instance { get; private set; }
 
@@ -33,17 +36,21 @@ public class RadioManager : MonoBehaviour
     private System.Collections.IEnumerator EPlayDialogue(RadioDialogue dialogue)
     {
         int lineIndex = 0;
-        dialogueText.text = "";
+        dialogueText.text = (dialogue.name == string.Empty) ? "" : dialogue.name + ": " ;
 
         dialogueCanvasGroup.alpha = 0f;
         dialoguePanel.SetActive(true);
+
+        whiteNoise.Play();
+        whiteNoise.time = Random.Range(0f, whiteNoise.clip.length);
+
 
         yield return dialogueCanvasGroup.DOFade(1f, fadeDuration).WaitForCompletion();
 
         while (lineIndex < dialogue.lines.Length)
         {
             string line = dialogue.lines[lineIndex];
-            dialogueText.text = "";
+            dialogueText.text = (dialogue.name == string.Empty) ? "" : dialogue.name + ": ";
             foreach (char c in line)
             {
                 dialogueText.text += c;
@@ -54,6 +61,8 @@ public class RadioManager : MonoBehaviour
         }
 
         yield return dialogueCanvasGroup.DOFade(0f, fadeDuration).WaitForCompletion();
+
+        whiteNoise.Stop();
 
         dialoguePanel.SetActive(false);
     }

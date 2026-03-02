@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de032172ed798e445bff170538bcc215, type: 3}
+  m_Name: CreakSFXGroup
+  m_EditorClassIdentifier: Assembly-CSharp::SFXGroup
+  groupName: 
+  audioClips:
+  - {fileID: 8300000, guid: 3f49126cff3ea2f4ea5d7b3b97fcfed2, type: 3}
+  - {fileID: 8300000, guid: b0aecd74f9587304f93aba774fd173c0, type: 3}
+  - {fileID: 8300000, guid: 403f536f65e5c6a4f9ca63e964af8e08, type: 3}
+  - {fileID: 8300000, guid: 52abdbca0f4bbd241beafce481b685fb, type: 3}
+  - {fileID: 8300000, guid: e0e70a59a3d8b094db8f69bb58f043ea, type: 3}
+  - {fileID: 8300000, guid: 89ed2d29f9ed8764b879f4731d586c5b, type: 3}
+  - {fileID: 8300000, guid: 1a663b74b08d34e42901b8b2d47cb023, type: 3}
+  - {fileID: 8300000, guid: 3ea7148a9d45759418d031580c94ca93, type: 3}

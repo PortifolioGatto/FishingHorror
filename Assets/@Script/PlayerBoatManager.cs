@@ -21,6 +21,7 @@ public class PlayerBoatManager : MonoBehaviour
 
     public bool isDriving = false;
     public bool holdingWheel = false;
+    public bool canDrive = false;
 
     public static PlayerBoatManager Instance { get; private set; }
     private void Awake()
@@ -48,8 +49,15 @@ public class PlayerBoatManager : MonoBehaviour
         }
     }
 
+    public void SetCanDrive(bool canDrive)
+    {
+        this.canDrive = canDrive;
+    }
+
     public void ToggleDrivingMode()
     {
+        if(!canDrive) return;
+
         if (holdingWheel)
         {
             ExitDrivingMode();
@@ -61,8 +69,9 @@ public class PlayerBoatManager : MonoBehaviour
     }
     public void EnterDrivingMode()
     {
+        if (!canDrive) return;
+
         playerBlocker.isBlocking = true;
-        boatMovement.movementEnabled = true;
         holdingWheel = true;
 
         fishingSystem.SetVisible(false);
@@ -80,9 +89,10 @@ public class PlayerBoatManager : MonoBehaviour
 
     public void ExitDrivingMode()
     {
+        if (!canDrive) return;
+
         playerBlocker.isBlocking = false;
         playerCamera.cameraEnabled = true;
-        boatMovement.movementEnabled = false;
 
         holdingWheel = false;
 

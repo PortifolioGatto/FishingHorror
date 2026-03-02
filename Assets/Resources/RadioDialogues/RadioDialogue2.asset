@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2d7aaa03f3e79c4a80d26882ec329e0, type: 3}
   m_Name: RadioDialogue2
   m_EditorClassIdentifier: Assembly-CSharp::RadioDialogue
+  name: Tio
   lines:
-  - Conseguiu? Espero que sim
-  - "Agora, vai no controle do barco e vai atr\xE1s dos outros peixes"
-  - "Volte com a maior quantidade que conseguir, o evento \xE9 previsto para terminar
-    hoje"
+  - Eu vi essa fisgada ai hein
+  - "Muito bom, agora \xE9 s\xF3 ir buscar o resto, pega no controle do barco e se
+    divirta."

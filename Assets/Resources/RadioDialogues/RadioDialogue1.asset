@@ -12,6 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2d7aaa03f3e79c4a80d26882ec329e0, type: 3}
   m_Name: RadioDialogue1
   m_EditorClassIdentifier: Assembly-CSharp::RadioDialogue
+  name: Tio
   lines:
-  - Tem um peixe ai ao seu alcance
-  - "vai l\xE1 pegar maldito"
+  - "Bem vindo ao \"Vocatio Abyssi\" Hugo! Aqui \xE9 onde nos tornaremos ricos meu
+    jovem."
+  - "Como te disse, os peixes do mundo todo vem at\xE9 esse local a cada 8 anos,
+    estranho n\xE3o? Parece que as regras sobre habitats n\xE3o existem aqui."
+  - "Hoje \xE9 o ultimo dia ent\xE3o n\xE3o vamos encontrar mais ningu\xE9m por aqui."
+  - "Agora, vamos as instru\xE7\xF5es, seu barco veio equipado com um sonar, ele
+    vai te guiar na localiza\xE7\xE3o dos peixes mais pr\xF3ximos, basta ir e pegar,
+    n\xE3o importa o que voc\xEA pescar, vale dinheiro? Traz para casa"
+  - "Eu vou estar aqui por perto, mas cada um no seu quadrado hein, seu Tio tamb\xE9m
+    precisa de um dinheiro."
+  - "Como voc\xEA deu um jeito de quebrar o microfone do seu r\xE1dio, use o bot\xE3o
+    para entrar em contato, deixei instru\xE7\xF5es de Morse, \xE9 o que tem garoto."
+  - Grandes expectativas hein, bem grandes. Boa Sorte marujo!

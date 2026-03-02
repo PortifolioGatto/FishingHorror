@@ -8,6 +8,12 @@ public class CircularGridOcean : MonoBehaviour
     public int resolution = 128; // grid x grid
     public float radius = 500f;
 
+
+    private void Start()
+    {
+        Application.targetFrameRate = 60;
+    }
+
     private void Update()
     {
         transform.position = new Vector3(follow.position.x, transform.position.y, follow.position.z);

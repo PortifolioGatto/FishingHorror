@@ -9,6 +9,7 @@ using UnityEngine;
 public class DayNightCycle : MonoBehaviour
 {
     public float timeScale = 1f; // Multiplier for time progression speed (1 = normal, 2 = double speed, etc.)
+    public float dayDuration;
 
     [SerializeField] private TextMeshProUGUI timeDisplay; // Optional UI text to show current time of day (for testing)
 
@@ -193,6 +194,10 @@ public class DayNightCycle : MonoBehaviour
     // ===================== UPDATE =====================
     void Update()
     {
+
+        //Calculate how much time still needs to pass until the next day starts using timeScale cycleDuration and timeOfDay, in seconds
+        dayDuration = (1f - timeOfDay) * cycleDuration / timeScale;
+
         // Advance time
         if (!paused && cycleDuration > 0f)
         {
@@ -343,6 +348,13 @@ public class DayNightCycle : MonoBehaviour
         timeOfDay = Mathf.Repeat(t, 1f);
     }
 
+    public void GetTime(out int hours, out int minutes)
+    {
+        float totalHours = timeOfDay * 24f;
+        hours = Mathf.FloorToInt(totalHours);
+        minutes = Mathf.FloorToInt((totalHours - hours) * 60f);
+    }
+
     public void SetTime(int hours, int minutes)
     {
         hours = Mathf.Clamp(hours, 0, 23);
@@ -353,9 +365,20 @@ public class DayNightCycle : MonoBehaviour
 
     public void SetLimitTime(int hours, int minutes)
     {
+        if (hours < -1)
+        {
+            timeLimit = -1; 
+            return;
+        }
+
         hours = Mathf.Clamp(hours, 0, 23);
         minutes = Mathf.Clamp(minutes, 1, 59);
         timeLimit = (hours + minutes / 60f) / 24f;
+    }
+
+    public float GetTimeOfDay()
+    {
+        return timeOfDay;
     }
 
     /// <summary>Is it currently daytime?</summary>

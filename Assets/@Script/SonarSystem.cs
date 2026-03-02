@@ -6,12 +6,22 @@ using UnityEngine;
 
 public class SonarSystem : MonoBehaviour
 {
+    [System.Serializable]
+    public struct SonarType
+    {
+        public string name;
+        public LayerMask targetLayer;
+        public Sprite pingSprite;
+    }
+
+    [SerializeField] private SonarType[] sonarTypes;
+
     [SerializeField] private GameObject boatObject;
+    [SerializeField] private List<GameObject> ignorables;
     [SerializeField] private SonarVisualLine sonarVisualLine;
     [SerializeField] private float scanConversion = 0.16f;
     [SerializeField] private float scanRadius = 0.16f;
     [SerializeField] private float sonarTickRate = 1f;
-    [SerializeField] private LayerMask scanLayerMask;
     [SerializeField] private GameObject inRadarObject;
     [SerializeField] private bool onlyInScanLine;
 
@@ -34,91 +44,102 @@ public class SonarSystem : MonoBehaviour
     {
         while (true)
         {
-            Collider[] hits = Physics.OverlapSphere(
+            for (int i = 0; i < sonarTypes.Length; i++)
+            {
+                LayerMask scanLayerMask = sonarTypes[i].targetLayer;
+
+                Collider[] hits = Physics.OverlapSphere(
                 boatObject.transform.position,
                 scanRadius * 4f,
                 scanLayerMask
-            );
+                );
 
 
-            foreach (Collider hit in hits)
-            {
-                if(detectedObjects.Contains(hit))
-                    continue;
-
-                Vector3 targetPos = hit.transform.position;
-                targetPos.y = 0f;
-
-                // Converte para espaço local do barco
-                Vector3 localPos = boatObject.transform.InverseTransformPoint(targetPos);
-                localPos.y = 0f;
-
-                float distance = new Vector2(localPos.x, localPos.z).magnitude;
-
-                if (distance > scanRadius * 4)
-                    continue;
-
-                float distancePercent = distance / scanRadius;
-
-                Vector2 dir2D = new Vector2(-localPos.x, localPos.z).normalized;
-
-                Vector2 scanPos = dir2D * distancePercent * scanConversion;
-
-                bool isInScanLine = Vector2.Dot(dir2D, sonarVisualLine.GetScanDirection()) > 0.95f;
-                bool isInsideScanRadius = true;
-
-                if (isInScanLine || !onlyInScanLine)
+                foreach (Collider hit in hits)
                 {
-                    if(detectedObjects.Contains(hit))
+                    if(hit.transform == boatObject.transform)
                         continue;
 
-                    detectedObjects.Add(hit);
+                    if(ignorables.Contains(hit.gameObject))
+                        continue;
 
-                    StartCoroutine(WaitToEvent(() =>
-                    {
-                        detectedObjects.Remove(hit);
-                    }, sonarTickRate * 1f));
+                    if (detectedObjects.Contains(hit))
+                        continue;
 
-                    //Clamp scanPos dentro do círculo
-                    if (distance > scanRadius)
+                    Vector3 targetPos = hit.transform.position;
+                    targetPos.y = 0f;
+
+                    // Converte para espaço local do barco
+                    Vector3 localPos = boatObject.transform.InverseTransformPoint(targetPos);
+                    localPos.y = 0f;
+
+                    float distance = new Vector2(localPos.x, localPos.z).magnitude;
+
+                    if (distance > scanRadius * 4)
+                        continue;
+
+                    float distancePercent = distance / scanRadius;
+
+                    Vector2 dir2D = new Vector2(-localPos.x, localPos.z).normalized;
+
+                    Vector2 scanPos = dir2D * distancePercent * scanConversion;
+
+                    bool isInScanLine = Vector2.Dot(dir2D, sonarVisualLine.GetScanDirection()) > 0.95f;
+                    bool isInsideScanRadius = true;
+
+                    if (isInScanLine || !onlyInScanLine)
                     {
-                        scanPos = scanPos.normalized * .9f * scanConversion;
-                        isInsideScanRadius = false;
+                        if (detectedObjects.Contains(hit))
+                            continue;
+
+                        detectedObjects.Add(hit);
+
+                        StartCoroutine(WaitToEvent(() =>
+                        {
+                            detectedObjects.Remove(hit);
+                        }, sonarTickRate * 1f));
+
+                        //Clamp scanPos dentro do círculo
+                        if (distance > scanRadius)
+                        {
+                            scanPos = scanPos.normalized * .9f * scanConversion;
+                            isInsideScanRadius = false;
+                        }
+
+                        GameObject scaned = Instantiate(inRadarObject, sonarVisualLine.transform);
+
+                        TextMeshPro textMesh = scaned.GetComponentInChildren<TextMeshPro>();
+
+                        textMesh.transform.localScale = new Vector3(-1, 1, 1);
+
+                        textMesh.text = isInsideScanRadius ? Vector3.Distance(boatObject.transform.position, hit.transform.position).ToString("F1") + "m" : "";
+
+                        scaned.transform.localPosition = new Vector3(scanPos.x, scanPos.y, 0f);
+
+
+                        SpriteRenderer render = scaned.GetComponent<SpriteRenderer>();
+
+                        render.sprite = sonarTypes[i].pingSprite;
+
+                        render.color = new Color(0, 1, 0, 0);
+
+                        render.DOFade(1f, sonarTickRate)
+                              .OnComplete(() =>
+                              {
+                                  render.DOFade(0, sonarTickRate)
+                                    .OnComplete(() => Destroy(scaned));
+                              });
+
+                        textMesh.color = new Color(0, 1, 0, 0);
+
+                        textMesh.DOFade(1f, sonarTickRate)
+                                .OnComplete(() =>
+                                {
+                                    textMesh.DOFade(0, sonarTickRate);
+                                });
+                        //textMesh.DOFade(0, sonarTickRate);
                     }
-
-                    GameObject scaned = Instantiate(inRadarObject, sonarVisualLine.transform);
-
-                    TextMeshPro textMesh = scaned.GetComponentInChildren<TextMeshPro>();
-
-                    textMesh.transform.localScale = new Vector3(-1, 1, 1);
-
-                    textMesh.text = isInsideScanRadius ? Vector3.Distance(boatObject.transform.position, hit.transform.position).ToString("F1") + "m" : "";
-
-                    scaned.transform.localPosition = new Vector3(scanPos.x, scanPos.y, 0f);
-
-
-                    SpriteRenderer render = scaned.GetComponent<SpriteRenderer>();
-
-                    render.color = new Color(0, 1, 0, 0);
-
-                    render.DOFade(1f, sonarTickRate)
-                          .OnComplete(() =>
-                          {
-                              render.DOFade(0, sonarTickRate)
-                                .OnComplete(() => Destroy(scaned));
-                          });
-
-                    textMesh.color = new Color(0, 1, 0, 0);
-
-                    textMesh.DOFade(1f, sonarTickRate)
-                            .OnComplete(() =>
-                            {
-                                textMesh.DOFade(0, sonarTickRate);
-                            });
-                    //textMesh.DOFade(0, sonarTickRate);
                 }
-
-                
             }
 
             UpdateTextureHeight();

@@ -29,8 +29,8 @@ Shader "Custom/OceanLitComplete"
 
         [Header(Creature Shadows)]
         _CreatureShadowColor ("Shadow Color", Color) = (0.0, 0.02, 0.05, 1)
-        _CreatureShadowIntensity ("Shadow Intensity", Range(0, 1)) = 0.8
-        _CreatureShadowSoftness ("Shadow Edge Softness", Range(0.1, 20)) = 3.0
+        _CreatureShadowIntensity ("Shadow Intensity", Range(0, 2)) = 1.2
+        _CreatureShadowSoftness ("Shadow Edge Softness", Range(0.1, 20)) = 1.5
 
         [Header(Underwater Lights)]
         _SubsurfaceIntensity ("Subsurface Glow Intensity", Range(0, 5)) = 1.5
@@ -156,6 +156,18 @@ Shader "Custom/OceanLitComplete"
             float  _WakeTrailRangeCount;  // number of separate trails
             float4 _WakeTrailRanges[16];  // x = startIndex, y = pointCount, z/w = unused
 
+            // Globals from UnderwaterDecalManager
+            float  _UnderwaterDecalCount;
+            float4 _UnderwaterDecalPositions[8]; // xyz = world pos, w = depth below water
+            float4 _UnderwaterDecalParams[8];    // x = opacity, y = edgeFade, z = distortion, w = distortSpeed
+            float4 _UnderwaterDecalColors[8];    // rgb = tint, a = waterTintStrength
+            float4 _UnderwaterDecalExtra[8];     // x = darken, y = desaturate
+            float4 _UnderwaterDecalMatRow0[8];   // worldToLocal row 0
+            float4 _UnderwaterDecalMatRow1[8];   // worldToLocal row 1
+            float4 _UnderwaterDecalMatRow2[8];   // worldToLocal row 2
+            TEXTURE2D_ARRAY(_UnderwaterDecalTextures);
+            SAMPLER(sampler_UnderwaterDecalTextures);
+
             // =============================================
             // GERSTNER
             // =============================================
@@ -236,15 +248,15 @@ Shader "Custom/OceanLitComplete"
                     float dist = length(delta);
 
                     // Shadow gets softer and larger the deeper the creature is
-                    float depthSpread = 1.0 + depth * 0.3;
+                    float depthSpread = 1.0 + depth * 0.15;
                     float effectiveRadius = radius * depthSpread * elongation;
 
                     // Soft falloff
                     float falloff = 1.0 - saturate(dist / max(effectiveRadius, 0.01));
                     falloff = pow(falloff, _CreatureShadowSoftness);
 
-                    // Deeper = fainter shadow
-                    float depthFade = exp(-depth * 0.15);
+                    // Deeper = fainter shadow (much gentler fade than before)
+                    float depthFade = exp(-depth * 0.05);
 
                     shadow += falloff * depthFade * opacity;
                 }
@@ -417,6 +429,124 @@ Shader "Custom/OceanLitComplete"
                 }
 
                 return saturate(foam);
+            }
+
+            // =============================================
+            // UNDERWATER DECALS
+            // =============================================
+
+            // Projects decal textures onto the water surface using ray-plane intersection.
+            // A ray from the camera through the water surface pixel is intersected with
+            // the decal's local plane. This gives true perspective projection:
+            // - The decal appears at the exact position of the emitter object
+            // - Rotation distorts the projection realistically (like looking at a tilted card underwater)
+            // - The projection shifts with camera movement (parallax, like underwater lights)
+            float4 ComputeUnderwaterDecals(float3 worldPos, float3 viewDir)
+            {
+                float3 totalColor = 0;
+                float totalAlpha = 0;
+                int count = (int)_UnderwaterDecalCount;
+                float3 camPos = _WorldSpaceCameraPos;
+
+                for (int i = 0; i < count; i++)
+                {
+                    float opa = _UnderwaterDecalParams[i].x;
+                    float ef  = _UnderwaterDecalParams[i].y;
+                    float distAmt = _UnderwaterDecalParams[i].z;
+                    float distSpd = _UnderwaterDecalParams[i].w;
+                    float3 tint = _UnderwaterDecalColors[i].rgb;
+                    float wtStr = _UnderwaterDecalColors[i].a;
+                    float darken = _UnderwaterDecalExtra[i].x;
+                    float desat = _UnderwaterDecalExtra[i].y;
+
+                    if (opa < 0.001) continue;
+
+                    float3 decalPos = _UnderwaterDecalPositions[i].xyz;
+
+                    // Decal local Y axis = the plane normal (up direction of the decal object)
+                    // Extract from the inverse matrix: the Y row gives us the local Y direction
+                    // But we need the forward transform's Y axis. We can get the plane normal
+                    // from the matrix rows: normal = cross(row0.xyz, row2.xyz) normalized
+                    // Actually simpler: the decal's local Y in world space.
+                    // From worldToLocal matrix, the columns of the inverse = rows of worldToLocal
+                    // The local Y axis in world space = inverse of row1 direction
+                    // For a proper plane intersection, we use the worldToLocal to project.
+
+                    // Ray: origin = camPos, direction = normalize(worldPos - camPos)
+                    // We shoot through the water surface point toward the decal.
+                    float3 rayDir = normalize(worldPos - camPos);
+
+                    // Transform ray into decal local space
+                    // Local ray origin
+                    float4 camW = float4(camPos, 1.0);
+                    float3 localCam = float3(
+                        dot(_UnderwaterDecalMatRow0[i], camW),
+                        dot(_UnderwaterDecalMatRow1[i], camW),
+                        dot(_UnderwaterDecalMatRow2[i], camW)
+                    );
+
+                    // Local ray direction (no translation, w=0)
+                    float4 dirW = float4(rayDir, 0.0);
+                    float3 localDir = float3(
+                        dot(_UnderwaterDecalMatRow0[i], dirW),
+                        dot(_UnderwaterDecalMatRow1[i], dirW),
+                        dot(_UnderwaterDecalMatRow2[i], dirW)
+                    );
+
+                    // Intersect ray with the local Y=0 plane (the decal face)
+                    // localCam.y + t * localDir.y = 0
+                    // t = -localCam.y / localDir.y
+                    if (abs(localDir.y) < 0.0001) continue; // ray parallel to plane
+                    float t = -localCam.y / localDir.y;
+                    if (t < 0) continue; // decal is behind camera
+
+                    // Hit point in local space
+                    float3 localHit = localCam + localDir * t;
+
+                    // UV from local XZ (unit cube: [-0.5, 0.5] → [0, 1])
+                    float2 uv = localHit.xz + 0.5;
+
+                    // Skip if outside
+                    if (uv.x < -0.05 || uv.x > 1.05 || uv.y < -0.05 || uv.y > 1.05) continue;
+
+                    // Wave distortion
+                    float tw = _Time.y * distSpd;
+                    float2 dUV = worldPos.xz * 2.0;
+                    float2 distort = float2(
+                        sin(dUV.x * 2.7 + tw * 1.1 + sin(dUV.y * 1.9 + tw * 0.7)),
+                        cos(dUV.y * 3.1 + tw * 0.9 + sin(dUV.x * 2.3 + tw * 1.3))
+                    ) * distAmt;
+                    uv += distort;
+                    uv = saturate(uv);
+
+                    // Sample texture
+                    float4 texCol = SAMPLE_TEXTURE2D_ARRAY(_UnderwaterDecalTextures,
+                                    sampler_UnderwaterDecalTextures, uv, i);
+
+                    // Tint
+                    float3 col = texCol.rgb * tint;
+
+                    // Water tint
+                    col = lerp(col, col * float3(0.0, 0.4, 0.6), wtStr);
+
+                    // Darken
+                    col *= 1.0 - darken;
+
+                    // Desaturate
+                    float lum = dot(col, float3(0.299, 0.587, 0.114));
+                    col = lerp(col, float3(lum, lum, lum), desat);
+
+                    // Edge fade
+                    float2 edgeDist = min(uv, 1.0 - uv);
+                    float edgeMask = (ef > 0.001) ? saturate(min(edgeDist.x, edgeDist.y) / ef) : 1.0;
+
+                    float alpha = texCol.a * opa * edgeMask;
+
+                    totalColor = lerp(totalColor, col, alpha);
+                    totalAlpha = saturate(totalAlpha + alpha * (1.0 - totalAlpha));
+                }
+
+                return float4(totalColor, totalAlpha);
             }
 
             // =============================================
@@ -593,12 +723,19 @@ Shader "Custom/OceanLitComplete"
                 float creatureShadow = ComputeCreatureShadow(IN.positionWS);
                 if (creatureShadow > 0.001)
                 {
-                    float shadowBlend = creatureShadow * _CreatureShadowIntensity;
+                    float shadowBlend = saturate(creatureShadow * _CreatureShadowIntensity);
                     baseColor = lerp(baseColor, _CreatureShadowColor.rgb, shadowBlend);
                 }
 
-                // View direction
+                // View direction (needed for decals and lights)
                 float3 viewDir = normalize(GetWorldSpaceNormalizeViewDir(IN.positionWS));
+
+                // ---- UNDERWATER DECALS ----
+                float4 decalResult = ComputeUnderwaterDecals(IN.positionWS, viewDir);
+                if (decalResult.a > 0.001)
+                {
+                    baseColor = lerp(baseColor, decalResult.rgb, decalResult.a);
+                }
 
                 // ---- UNDERWATER LIGHTS (subsurface glow) ----
                 // Pass scene depth so lights are occluded by geometry between camera and light

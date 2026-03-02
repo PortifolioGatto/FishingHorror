@@ -2,26 +2,21 @@ using UnityEngine;
 
 /// <summary>
 /// Attach to any object to make it spiral toward a vortex center,
-/// riding the water surface. Matches the vortex shader displacement
-/// so the object follows the funnel shape exactly.
+/// riding the water surface. Reads parameters from VortexController.
 ///
 /// Usage:
 /// 1. Attach to any GameObject (boat, debris, barrel, etc.)
-/// 2. Assign the vortex object (the plane with OceanVortex shader)
+/// 2. Assign vortexController (or leave null to auto-find VortexController.Instance)
 /// 3. Object will spiral inward, matching the water surface
-/// 4. When it reaches the core, onReachedCore fires and the object
-///    can be destroyed, teleported, or whatever you want.
+/// 4. When it reaches the core, onReachedCore fires
 ///
 /// The object does NOT need a Rigidbody. Movement is purely kinematic.
 /// </summary>
 public class VortexAffectedObject : MonoBehaviour
 {
     [Header("Vortex Reference")]
-    [Tooltip("The GameObject with the OceanVortex material (center = pivot)")]
-    public Transform vortexCenter;
-
-    [Tooltip("If null, auto-fetches from vortexCenter's Renderer")]
-    public Material vortexMaterial;
+    [Tooltip("If null, uses VortexController.Instance automatically")]
+    public VortexController vortexController;
 
     [Header("Spiral Movement")]
     [Tooltip("How fast the object orbits around the vortex (degrees/sec)")]
@@ -42,10 +37,6 @@ public class VortexAffectedObject : MonoBehaviour
 
     [Tooltip("Extra Y offset above the water surface")]
     public float surfaceOffset = 0.0f;
-
-    [Tooltip("How smoothly the object follows the surface height")]
-    [Range(1f, 20f)]
-    public float surfaceSmoothing = 8f;
 
     [Header("Tilt / Rotation")]
     [Tooltip("Object tilts toward the vortex center (leaning into the funnel)")]
@@ -96,99 +87,49 @@ public class VortexAffectedObject : MonoBehaviour
     // Events
     public System.Action onReachedCore;
 
-    // Cached vortex params
-    private float vortexRadius;
-    private float vortexDepth;
-    private float vortexInnerRadius;
-    private float vortexFunnelPower;
-    private float vortexSpinSpeed;
-    private float vortexSpiralTightness;
-    private float vortexSpiralHeight;
-    private float vortexSpiralCount;
-    private float vortexPullStrength;
-    private float waveHeight;
-    private float waveSpeed;
-
     // State
     private float currentAngle;
     private float currentRadius;
-    private float currentSurfaceY;
     private Vector3 lastPosition;
     private Quaternion targetRotation;
     private bool isSinking;
     private float sinkTimer;
     private float sinkStartY;
 
-    private static readonly int ID_VortexRadius = Shader.PropertyToID("_VortexRadius");
-    private static readonly int ID_VortexDepth = Shader.PropertyToID("_VortexDepth");
-    private static readonly int ID_VortexInnerRadius = Shader.PropertyToID("_VortexInnerRadius");
-    private static readonly int ID_VortexFunnelPower = Shader.PropertyToID("_VortexFunnelPower");
-    private static readonly int ID_VortexSpinSpeed = Shader.PropertyToID("_VortexSpinSpeed");
-    private static readonly int ID_VortexSpiralTight = Shader.PropertyToID("_VortexSpiralTightness");
-    private static readonly int ID_VortexSpiralHeight = Shader.PropertyToID("_VortexSpiralHeight");
-    private static readonly int ID_VortexSpiralCount = Shader.PropertyToID("_VortexSpiralCount");
-    private static readonly int ID_VortexPullStrength = Shader.PropertyToID("_VortexPullStrength");
-    private static readonly int ID_WaveHeight = Shader.PropertyToID("_WaveHeight");
-    private static readonly int ID_WaveSpeed = Shader.PropertyToID("_WaveSpeed");
+    // Shorthand
+    private Transform vortexCenter;
 
     void Start()
     {
-        if (vortexCenter == null)
+        if (vortexController == null)
+            vortexController = VortexController.Instance;
+
+        if (vortexController == null)
         {
-            Debug.LogWarning("VortexAffectedObject: no vortex center assigned!", this);
+            var go = GameObject.FindGameObjectWithTag("VortexCenter");
+            if (go != null)
+                vortexController = go.GetComponent<VortexController>();
+        }
+
+        if (vortexController == null)
+        {
+            Debug.LogWarning("VortexAffectedObject: no VortexController found!", this);
             enabled = false;
             return;
         }
 
-        // Auto-get material
-        if (vortexMaterial == null)
-        {
-            var renderer = vortexCenter.GetComponent<Renderer>();
-            if (renderer != null)
-                vortexMaterial = renderer.sharedMaterial;
-        }
+        vortexCenter = vortexController.transform;
 
-        ReadVortexParams();
-
-        // Initialize angle and radius from current position
         Vector3 delta = transform.position - vortexCenter.position;
         currentAngle = Mathf.Atan2(delta.z, delta.x);
         currentRadius = new Vector2(delta.x, delta.z).magnitude;
-        currentSurfaceY = transform.position.y;
         lastPosition = transform.position;
         targetRotation = transform.rotation;
     }
 
-    void ReadVortexParams()
-    {
-        if (vortexMaterial == null) return;
-
-        vortexRadius = vortexMaterial.GetFloat(ID_VortexRadius);
-        vortexDepth = vortexMaterial.GetFloat(ID_VortexDepth);
-        vortexInnerRadius = vortexMaterial.GetFloat(ID_VortexInnerRadius);
-        vortexFunnelPower = vortexMaterial.GetFloat(ID_VortexFunnelPower);
-        vortexSpinSpeed = vortexMaterial.GetFloat(ID_VortexSpinSpeed);
-        vortexSpiralTightness = vortexMaterial.GetFloat(ID_VortexSpiralTight);
-        vortexSpiralHeight = vortexMaterial.GetFloat(ID_VortexSpiralHeight);
-        vortexSpiralCount = vortexMaterial.GetFloat(ID_VortexSpiralCount);
-        vortexPullStrength = vortexMaterial.GetFloat(ID_VortexPullStrength);
-        waveHeight = vortexMaterial.GetFloat(ID_WaveHeight);
-        waveSpeed = vortexMaterial.GetFloat(ID_WaveSpeed);
-    }
-
-    private float paramTimer = 0f;
-
     void LateUpdate()
     {
-        if (vortexCenter == null) return;
-
-        // Re-read material params once per second, not every frame
-        paramTimer -= Time.deltaTime;
-        if (paramTimer <= 0f)
-        {
-            ReadVortexParams();
-            paramTimer = .01f;
-        }
+        if (vortexController == null || vortexCenter == null) return;
 
         float dt = Time.deltaTime;
         Vector3 center = vortexCenter.position;
@@ -199,14 +140,15 @@ public class VortexAffectedObject : MonoBehaviour
             return;
         }
 
-        float normDist = Mathf.Clamp01(currentRadius / Mathf.Max(vortexRadius, 0.01f));
+        float vRadius = vortexController.radius;
+        float normDist = Mathf.Clamp01(currentRadius / Mathf.Max(vRadius, 0.01f));
 
-        // ---- INWARD PULL (constant, smooth) ----
+        // ---- INWARD PULL ----
         float pullMult = 1.0f + (1.0f - normDist) * pullAcceleration;
         currentRadius -= pullSpeed * pullMult * dt;
         currentRadius = Mathf.Max(currentRadius, 0f);
 
-        // ---- ORBIT (constant, smooth) ----
+        // ---- ORBIT ----
         float orbitMult = 1.0f + (1.0f - normDist) * orbitAcceleration;
         float wobbleMult = 1.0f + Mathf.Sin(Time.time * wobbleSpeed) * wobbleAmount * 0.1f;
         currentAngle += orbitSpeed * orbitMult * wobbleMult * Mathf.Deg2Rad * dt;
@@ -215,12 +157,10 @@ public class VortexAffectedObject : MonoBehaviour
         float x = center.x + Mathf.Cos(currentAngle) * currentRadius;
         float z = center.z + Mathf.Sin(currentAngle) * currentRadius;
 
-        // ---- SURFACE Y (direct, no smoothing) ----
+        // ---- SURFACE Y ----
         float y = center.y;
         if (followSurface)
-        {
             y = ComputeVortexSurfaceY(center, x, z);
-        }
         y += surfaceOffset;
 
         Vector3 newPos = new Vector3(x, y, z);
@@ -232,48 +172,41 @@ public class VortexAffectedObject : MonoBehaviour
         transform.position = newPos;
 
         // ---- CORE CHECK ----
-        normDist = Mathf.Clamp01(currentRadius / Mathf.Max(vortexRadius, 0.01f));
+        normDist = Mathf.Clamp01(currentRadius / Mathf.Max(vRadius, 0.01f));
         if (normDist <= coreThreshold)
-        {
             OnReachedCore();
-        }
     }
 
     /// <summary>
-    /// Computes the Y position on the vortex surface at a given XZ point.
-    /// Mirrors the shader's vertex displacement math.
+    /// Computes the Y on the vortex surface. Reads from VortexController fields directly.
     /// </summary>
     float ComputeVortexSurfaceY(Vector3 center, float worldX, float worldZ)
     {
-        float baseY = center.y;
-
         float dx = worldX - center.x;
         float dz = worldZ - center.z;
         float dist = Mathf.Sqrt(dx * dx + dz * dz);
-        float normDist = Mathf.Clamp01(dist / Mathf.Max(vortexRadius, 0.01f));
+        float vRadius = vortexController.radius;
+        float normDist = Mathf.Clamp01(dist / Mathf.Max(vRadius, 0.01f));
 
-        // Funnel depression only (smooth curve, no rapid oscillations)
-        float funnelT = 1.0f - Mathf.Clamp01((normDist - vortexInnerRadius) / (1.0f - vortexInnerRadius));
-        float funnel = Mathf.Pow(funnelT, vortexFunnelPower);
-        float depression = -funnel * vortexDepth;
+        float funnelT = 1.0f - Mathf.Clamp01(
+            (normDist - vortexController.innerRadius) /
+            (1.0f - vortexController.innerRadius)
+        );
+        float funnel = Mathf.Pow(funnelT, vortexController.funnelPower);
+        float depression = -funnel * vortexController.depth;
 
-        return baseY + depression;
+        return center.y + depression;
     }
 
     void UpdateRotation(Vector3 newPos, Vector3 center, float normDist, float dt)
     {
         if (faceMovementDirection)
         {
-            // Compute tangent direction analytically from the orbit angle.
-            // The orbit moves along (cos(angle), sin(angle)), so the tangent
-            // (derivative) is (-sin(angle), cos(angle)). This is always smooth
-            // regardless of orbit speed — no frame delta, no atan2 jumps.
             float tangentX = -Mathf.Sin(currentAngle);
             float tangentZ = Mathf.Cos(currentAngle);
 
-            // Blend in a small inward component so the object leans into the spiral
             float inwardBlend = Mathf.Lerp(0f, 0.3f, 1f - normDist);
-            Vector3 toCenter = (center - newPos);
+            Vector3 toCenter = center - newPos;
             toCenter.y = 0;
             Vector3 inward = toCenter.sqrMagnitude > 0.01f ? toCenter.normalized : Vector3.zero;
 
@@ -281,13 +214,9 @@ public class VortexAffectedObject : MonoBehaviour
             facingDir = Vector3.Lerp(facingDir, inward, inwardBlend).normalized;
 
             if (facingDir.sqrMagnitude > 0.001f)
-            {
-                Quaternion lookRot = Quaternion.LookRotation(facingDir, Vector3.up);
-                targetRotation = lookRot;
-            }
+                targetRotation = Quaternion.LookRotation(facingDir, Vector3.up);
         }
 
-        // Tilt toward center
         if (tiltTowardCenter)
         {
             Vector3 toCenter = center - newPos;
@@ -296,8 +225,7 @@ public class VortexAffectedObject : MonoBehaviour
             {
                 float tiltAngle = maxTilt * (1.0f - normDist);
                 Vector3 tiltAxis = Vector3.Cross(Vector3.up, toCenter.normalized);
-                Quaternion tilt = Quaternion.AngleAxis(tiltAngle, tiltAxis);
-                targetRotation = tilt * targetRotation;
+                targetRotation = Quaternion.AngleAxis(tiltAngle, tiltAxis) * targetRotation;
             }
         }
 
@@ -310,31 +238,15 @@ public class VortexAffectedObject : MonoBehaviour
 
         switch (coreAction)
         {
-            case CoreAction.Nothing:
-                break;
-
+            case CoreAction.Nothing: break;
             case CoreAction.Destroy:
-                if (sinkDuration > 0)
-                {
-                    StartSinking();
-                }
-                else
-                {
-                    Destroy(gameObject);
-                }
+                if (sinkDuration > 0) StartSinking();
+                else Destroy(gameObject);
                 break;
-
             case CoreAction.Disable:
-                if (sinkDuration > 0)
-                {
-                    StartSinking();
-                }
-                else
-                {
-                    gameObject.SetActive(false);
-                }
+                if (sinkDuration > 0) StartSinking();
+                else gameObject.SetActive(false);
                 break;
-
             case CoreAction.Respawn:
                 Respawn();
                 break;
@@ -353,46 +265,34 @@ public class VortexAffectedObject : MonoBehaviour
         sinkTimer += dt;
         float t = Mathf.Clamp01(sinkTimer / sinkDuration);
 
-        // Keep orbiting while sinking
-        float normDist = Mathf.Clamp01(currentRadius / Mathf.Max(vortexRadius, 0.01f));
+        float vRadius = vortexController.radius;
+        float normDist = Mathf.Clamp01(currentRadius / Mathf.Max(vRadius, 0.01f));
         float orbitMult = 1.0f + (1.0f - normDist) * orbitAcceleration;
-        currentAngle += orbitSpeed * orbitMult * 2f * Mathf.Deg2Rad * dt; // spin fast
+        currentAngle += orbitSpeed * orbitMult * 2f * Mathf.Deg2Rad * dt;
 
         float x = center.x + Mathf.Cos(currentAngle) * currentRadius;
         float z = center.z + Mathf.Sin(currentAngle) * currentRadius;
 
-        // Sink below surface
-        float sinkDepth = Mathf.Lerp(0f, vortexDepth * 0.5f, t * t);
-        float y = sinkStartY - sinkDepth;
-
-        transform.position = new Vector3(x, y, z);
-
-        // Scale down while sinking
-        float scale = Mathf.Lerp(1f, 0.3f, t);
-        transform.localScale = Vector3.one * scale;
+        float sinkDepth = Mathf.Lerp(0f, vortexController.depth * 0.5f, t * t);
+        transform.position = new Vector3(x, sinkStartY - sinkDepth, z);
+        transform.localScale = Vector3.one * Mathf.Lerp(1f, 0.3f, t);
 
         if (t >= 1f)
         {
             switch (coreAction)
             {
-                case CoreAction.Destroy:
-                    Destroy(gameObject);
-                    break;
-                case CoreAction.Disable:
-                    gameObject.SetActive(false);
-                    break;
-                default:
-                    isSinking = false;
-                    break;
+                case CoreAction.Destroy: Destroy(gameObject); break;
+                case CoreAction.Disable: gameObject.SetActive(false); break;
+                default: isSinking = false; break;
             }
         }
     }
 
     void Respawn()
     {
-        // Reset to outer edge at random angle
+        float vRadius = vortexController.radius;
         currentAngle = Random.Range(0f, Mathf.PI * 2f);
-        currentRadius = vortexRadius * respawnDistance;
+        currentRadius = vRadius * respawnDistance;
         isSinking = false;
         sinkTimer = 0f;
         transform.localScale = Vector3.one;
@@ -400,38 +300,29 @@ public class VortexAffectedObject : MonoBehaviour
         Vector3 center = vortexCenter.position;
         float x = center.x + Mathf.Cos(currentAngle) * currentRadius;
         float z = center.z + Mathf.Sin(currentAngle) * currentRadius;
-        float y = ComputeVortexSurfaceY(center, x, z);
-
-        transform.position = new Vector3(x, y, z);
+        transform.position = new Vector3(x, ComputeVortexSurfaceY(center, x, z), z);
     }
 
     // =============================================
     // PUBLIC API
     // =============================================
 
-    /// <summary>
-    /// Instantly place the object at a specific normalized distance from center.
-    /// </summary>
     public void SetNormalizedDistance(float normDist)
     {
-        normDist = Mathf.Clamp01(normDist);
-        currentRadius = vortexRadius * normDist;
+        float vRadius = vortexController != null ? vortexController.radius : 50f;
+        currentRadius = vRadius * Mathf.Clamp01(normDist);
     }
 
-    /// <summary>
-    /// Kick the object outward (e.g. it fought the current).
-    /// </summary>
     public void PushOutward(float amount)
     {
-        currentRadius = Mathf.Min(currentRadius + amount, vortexRadius);
+        float vRadius = vortexController != null ? vortexController.radius : 50f;
+        currentRadius = Mathf.Min(currentRadius + amount, vRadius);
     }
 
-    /// <summary>
-    /// Get how far the object is from the center (0=core, 1=edge).
-    /// </summary>
     public float GetNormalizedDistance()
     {
-        return Mathf.Clamp01(currentRadius / Mathf.Max(vortexRadius, 0.01f));
+        float vRadius = vortexController != null ? vortexController.radius : 50f;
+        return Mathf.Clamp01(currentRadius / Mathf.Max(vRadius, 0.01f));
     }
 
     // =============================================
@@ -440,29 +331,26 @@ public class VortexAffectedObject : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
-        if (vortexCenter == null) return;
+        Transform vc = vortexController != null ? vortexController.transform : null;
+        if (vc == null) return;
 
-        // Draw current orbit circle
         Gizmos.color = Color.yellow;
-        DrawCircleGizmo(vortexCenter.position, currentRadius, 48);
+        DrawCircleGizmo(vc.position, currentRadius, 48);
 
-        // Draw core threshold
         Gizmos.color = Color.red;
-        float coreR = (vortexMaterial != null ? vortexMaterial.GetFloat(ID_VortexRadius) : 50f) * coreThreshold;
-        DrawCircleGizmo(vortexCenter.position, coreR, 24);
+        DrawCircleGizmo(vc.position, vortexController.radius * coreThreshold, 24);
 
-        // Line from object to center
         Gizmos.color = new Color(1, 1, 0, 0.3f);
-        Gizmos.DrawLine(transform.position, vortexCenter.position);
+        Gizmos.DrawLine(transform.position, vc.position);
     }
 
-    void DrawCircleGizmo(Vector3 center, float radius, int segments)
+    void DrawCircleGizmo(Vector3 center, float r, int segments)
     {
-        Vector3 prev = center + new Vector3(radius, 0, 0);
+        Vector3 prev = center + new Vector3(r, 0, 0);
         for (int i = 1; i <= segments; i++)
         {
             float a = (float)i / segments * Mathf.PI * 2f;
-            Vector3 next = center + new Vector3(Mathf.Cos(a) * radius, 0, Mathf.Sin(a) * radius);
+            Vector3 next = center + new Vector3(Mathf.Cos(a) * r, 0, Mathf.Sin(a) * r);
             Gizmos.DrawLine(prev, next);
             prev = next;
         }

@@ -5,8 +5,15 @@ public class ProgressionStep : MonoBehaviour
 {
     public RadioDialogue dialogueToPlayOnStart;
 
-    public int timeInHours;
-    public int timeInMinutes;
+    public int timeInHours_newLimit = -1;
+    public int timeInMinutes_newLimit;
+
+    [Space]
+
+    public int timeInHours_end;
+    public int timeInMinutes_end;
+
+    [Space]
 
     public UnityEvent onStepActivated;
     public UnityEvent onStepDeactivated;
@@ -33,7 +40,7 @@ public class ProgressionStep : MonoBehaviour
             if (dialogueToPlayOnStart != null)
                 RadioManager.Instance.PlayDialogue(dialogueToPlayOnStart);
 
-            if (timeInHours != -1) DayNightCycle.Instance.SetLimitTime(timeInHours, timeInMinutes);
+            if (timeInHours_newLimit != -1) DayNightCycle.Instance.SetLimitTime(timeInHours_newLimit, timeInMinutes_newLimit);
 
             Debug.Log($"Activating step: {gameObject.name}");
 
@@ -58,6 +65,27 @@ public class ProgressionStep : MonoBehaviour
     {
         if(isActive)
         {
+
+            if (timeInHours_end != -1)
+            {
+
+                DayNightCycle.Instance.GetTime(out int hours, out int minutes);
+
+                Debug.Log($"Checking time for step completion: {hours}:{minutes} / {timeInHours_end}:{timeInMinutes_end}");
+
+                if ((hours == timeInHours_end && minutes >= timeInMinutes_end))
+                {
+                    onStepCompleted.Invoke();
+                    SetActive(false);
+                    return;
+                }
+            }
+
+
+            if (neededToCompleteStep.Length == 0)
+            {
+                return;
+            }
             bool allCompleted = true;
             foreach (var spot in neededToCompleteStep)
             {

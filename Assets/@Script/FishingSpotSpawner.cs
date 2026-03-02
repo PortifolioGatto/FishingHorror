@@ -17,6 +17,9 @@ public class FishingSpotSpawner : MonoBehaviour
     [SerializeField] private Vector2 spawnAreaMin;
     [SerializeField] private Vector2 spawnAreaMax;
 
+    [SerializeField]
+    private bool randomSpawningEnabled = false;
+
     private float spawnTimer;
     private bool anySpotExpired;
     private bool anySpotCanMove;
@@ -38,67 +41,92 @@ public class FishingSpotSpawner : MonoBehaviour
 
     private void Update()
     {
-        //spawnTimer -= Time.deltaTime;
-        //if (spawnTimer <= 0f)
-        //{
-        //    for (int i = 0; i < spawnAmount; i++)
-        //    {
-        //        SpawnFishingSpot();
-        //    }
-            
-        //    spawnTimer = spawnInterval;
-        //}
+        if (!randomSpawningEnabled) return;
 
-        //anySpotExpired = false;
-        //anySpotCanMove = false;
+        spawnTimer -= Time.deltaTime;
+        if (spawnTimer <= 0f)
+        {
+            for (int i = 0; i < spawnAmount; i++)
+            {
+                SpawnFishingSpot();
+            }
 
-        //for (int i = spawnedFishingSpots.Count - 1; i >= 0; i--)
-        //{
-        //    SpawnedFishingSpot spot = spawnedFishingSpots[i];
-        //    spot.duration -= Time.deltaTime;
-        //    spot.moveTimer -= Time.deltaTime;
+            spawnTimer = spawnInterval;
+        }
 
-        //    if (spot.duration <= 0f)
-        //    {
-        //        anySpotExpired = true;
-        //    }
+        anySpotExpired = false;
+        anySpotCanMove = false;
 
-        //    if(spot.moveTimer <= 0f)
-        //    {
-        //        anySpotCanMove = true;
-        //    }
+        for (int i = spawnedFishingSpots.Count - 1; i >= 0; i--)
+        {
+            SpawnedFishingSpot spot = spawnedFishingSpots[i];
+            spot.duration -= Time.deltaTime;
+            spot.moveTimer -= Time.deltaTime;
 
-        //}
+            if (spot.duration <= 0f)
+            {
+                anySpotExpired = true;
+            }
 
-        //if(anySpotExpired)
-        //{
-        //    for (int i = spawnedFishingSpots.Count - 1; i >= 0; i--)
-        //    {
-        //        SpawnedFishingSpot spot = spawnedFishingSpots[i];
-        //        if(spot.duration <= 0f)
-        //        {
-        //            DisposeFishingSpot(spot);
-        //        }
-        //    }
-        //}
-        
-        //if(anySpotCanMove)
-        //{
-        //    for (int i = spawnedFishingSpots.Count - 1; i >= 0; i--)
-        //    {
-        //        SpawnedFishingSpot spot = spawnedFishingSpots[i];
-        //        if(spot.moveTimer <= 0f)
-        //        {
-        //            Vector3 newPosition = spot.fishingSpot.transform.position + new Vector3(Random.Range(-moveDistance, moveDistance), 0f, Random.Range(-moveDistance, moveDistance));
-        //            newPosition.x = Mathf.Clamp(newPosition.x, spawnAreaMin.x, spawnAreaMax.x);
-        //            newPosition.z = Mathf.Clamp(newPosition.z, spawnAreaMin.y, spawnAreaMax.y);
-        //            spot.moveTimer = Random.Range(minTimeToMoveSpot, maxTimeToMoveSpot);
+            if (spot.moveTimer <= 0f)
+            {
+                anySpotCanMove = true;
+            }
 
-        //            ForceSmoothMove(spot, newPosition, 1f);
+        }
 
-        //        }
-        //    }
-        //}
+        if (anySpotExpired)
+        {
+            for (int i = spawnedFishingSpots.Count - 1; i >= 0; i--)
+            {
+                SpawnedFishingSpot spot = spawnedFishingSpots[i];
+                if (spot.duration <= 0f)
+                {
+                    DisposeFishingSpot(spot);
+                }
+            }
+        }
+
+        if (anySpotCanMove)
+        {
+            for (int i = spawnedFishingSpots.Count - 1; i >= 0; i--)
+            {
+                SpawnedFishingSpot spot = spawnedFishingSpots[i];
+
+                if(spot.fishingSpot == null)
+                {
+                    continue;
+                }
+
+                if (spot.moveTimer <= 0f)
+                {
+                    Vector3 newPosition = spot.fishingSpot.transform.position + new Vector3(Random.Range(-moveDistance, moveDistance), 0f, Random.Range(-moveDistance, moveDistance));
+                    newPosition.x = Mathf.Clamp(newPosition.x, spawnAreaMin.x, spawnAreaMax.x);
+                    newPosition.z = Mathf.Clamp(newPosition.z, spawnAreaMin.y, spawnAreaMax.y);
+                    spot.moveTimer = Random.Range(minTimeToMoveSpot, maxTimeToMoveSpot);
+
+                    ForceSmoothMove(spot, newPosition, 1f);
+
+                }
+            }
+        }
+    }
+
+    public void EnableRandomSpawning(bool enabled)
+    {
+        randomSpawningEnabled = enabled;
+        if (!enabled)
+        {
+            spawnTimer = 0f; // Reset timer when disabling
+        }
+    }
+
+    public void SpawnFishingSpotAtMap()
+    {
+        for (int i = 0; i < 50; i++)
+        {
+            SpawnFishingSpot();
+        }
     }
 
     [ContextMenu("Run To Player")]
@@ -145,7 +173,8 @@ public class FishingSpotSpawner : MonoBehaviour
 
             if (spawnedSpot.availableFishCount <= 0)
             {
-                spawnedSpot.fishingSpot.DisposeSpot();
+                if(spawnedSpot.fishingSpot != null)
+                    spawnedSpot.fishingSpot.DisposeSpot();
             }
         });
 
@@ -161,6 +190,10 @@ public class FishingSpotSpawner : MonoBehaviour
 
     public void ForceSmoothMove(SpawnedFishingSpot spot, Vector3 targetPosition, float duration)
     {
+        if(spot.fishingSpot == null)
+        {
+            return;
+        }
         StartCoroutine(SmoothMove(spot.fishingSpot.transform, targetPosition, duration));
     }
 

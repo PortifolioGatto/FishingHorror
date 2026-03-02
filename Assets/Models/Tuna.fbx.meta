@@ -23,7 +23,12 @@ ModelImporter:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: Tuna
-    second: {fileID: 2800000, guid: 6afd653cec07f934e8893b4ea042ac83, type: 3}
+    second: {fileID: 2800000, guid: e935d0acd01deff449a617ad9ce4e4b8, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: Tuna_Eye
+    second: {fileID: 2800000, guid: 6befff3825bda9448a09fac895cd62e3, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0

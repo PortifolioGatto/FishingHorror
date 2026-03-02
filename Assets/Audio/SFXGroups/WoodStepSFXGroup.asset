@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de032172ed798e445bff170538bcc215, type: 3}
+  m_Name: WoodStepSFXGroup
+  m_EditorClassIdentifier: Assembly-CSharp::SFXGroup
+  groupName: 
+  audioClips:
+  - {fileID: 8300000, guid: 7068ef87816463f44820a28a23ac725b, type: 3}
+  - {fileID: 8300000, guid: 49b365009edbff848b9494d6b1ede98c, type: 3}
+  - {fileID: 8300000, guid: f9335d0d9a890c943841af0ecd2df1b2, type: 3}
+  - {fileID: 8300000, guid: 169cef5ad71957b4f98c39c18236fcdc, type: 3}
+  - {fileID: 8300000, guid: ece495e76271986428b303d74ecc394a, type: 3}
+  - {fileID: 8300000, guid: b1d0fe7823e850a4f9958d9bd7936c6c, type: 3}
+  - {fileID: 8300000, guid: 75b9c202a4c1f7142af3b4d3ad8cf65b, type: 3}
+  - {fileID: 8300000, guid: 45cde499ac1dfa448b5c58e582375bb4, type: 3}
+  - {fileID: 8300000, guid: f1fd2066d430fba479aa28eadd240e7d, type: 3}
+  - {fileID: 8300000, guid: 1a073c68cdbf35546a9f1a6e7500bc2e, type: 3}

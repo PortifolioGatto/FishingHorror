@@ -17,7 +17,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 1
-  m_CustomRenderQueue: 2999
+  m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses:
   - MOTIONVECTORS
@@ -95,8 +95,8 @@ Material:
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _CreatureShadowIntensity: 1
-    - _CreatureShadowSoftness: 0.9
+    - _CreatureShadowIntensity: 1.472
+    - _CreatureShadowSoftness: 7.53
     - _Cull: 2
     - _Cutoff: 0.5
     - _DepthFade: 2
@@ -192,7 +192,7 @@ Material:
     m_Colors:
     - _BaseColor: {r: 0.15566038, g: 0.44716987, b: 0.6226415, a: 1}
     - _Color: {r: 0.15566033, g: 0.44716984, b: 0.62264144, a: 1}
-    - _CreatureShadowColor: {r: 0, g: 0.02, b: 0.049999982, a: 1}
+    - _CreatureShadowColor: {r: 0, g: 0, b: 0, a: 1}
     - _DeepColor: {r: 0.19508326, g: 0.12156852, b: 0.517647, a: 1}
     - _DepthShallowColor: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

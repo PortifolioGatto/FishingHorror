@@ -29,6 +29,7 @@ public class FishingRod : MonoBehaviour
     public Transform HookPoint => hookRb.transform;
     [SerializeField] private HookMode hookMode = HookMode.IDLE;
     [SerializeField] private LayerMask waterMask;
+    [SerializeField] private LayerMask boatMask;
 
     private FishInstance currentFish;
     public FishInstance CurrentFish => currentFish;
@@ -367,8 +368,34 @@ public class FishingRod : MonoBehaviour
 
                     OceanManager.Instance.SpawnRipple(hit.point);
                 }
+
+
+                bool hittingBoat = Physics.SphereCast(hookRb.transform.position, 0.2f, Vector3.down, out RaycastHit boatHit, 0.2f, boatMask);
+                if (isCasting && hittingBoat)
+                {
+                    reelWheel.transform.DOKill();
+                    if (reelSource != null)
+                    {
+                        reelSource.Stop();
+                        Destroy(reelSource.gameObject, 0.1f);
+                    }
+                    isCasting = false;
+                    hookRb.isKinematic = true;
+                    hookRb.linearVelocity = Vector3.zero;
+                    hookMode = HookMode.IDLE;
+                    hookRb.transform.position = boatHit.point;
+
+                    ResetHook();
+                }
+
                 break;
             case HookMode.WAITING_FOR_CATCH:
+
+                float dist = Vector3.Distance(hookRb.position, rodTip.position);
+                if (dist > 50f)
+                {
+                    ResetHook();
+                }
 
                 break;
             case HookMode.CATCHING:

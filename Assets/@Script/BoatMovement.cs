@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 
 public class BoatMovement : MonoBehaviour
 {
+    public bool holdingWheel = false;
     public bool movementEnabled = false;
 
     [SerializeField] private Vector3 minSizeSea;
@@ -44,12 +45,13 @@ public class BoatMovement : MonoBehaviour
     {
         if (!movementEnabled)
         {
+            return;
         }
 
         float inputVertical = moveAction.action.ReadValue<float>();
         float inputHorizontal = turnAction.action.ReadValue<float>();
 
-        if (!movementEnabled)
+        if (PlayerBoatManager.Instance.holdingWheel == false)
         {
             inputHorizontal = 0f;
             inputVertical = 0f;

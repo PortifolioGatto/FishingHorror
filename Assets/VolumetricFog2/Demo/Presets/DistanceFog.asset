@@ -38,7 +38,7 @@ MonoBehaviour:
   customHeight: 0
   height: 0
   verticalOffset: 0
-  distance: 0
+  distance: 1
   distanceFallOff: 1
   maxDistance: 10000
   maxDistanceFallOff: 0
@@ -147,9 +147,9 @@ MonoBehaviour:
   distantFogRenderQueue: 2999
   distantFogBaseAltitude: 0
   distantFogSymmetrical: 0
+  distantFogTransparencySupport: 0
   distantFogNoise: 0
-  distantFogNoiseTexture: {fileID: 11700000, guid: 950add8d241c6479bbab1f10e1035d60,
-    type: 2}
+  distantFogNoiseTexture: {fileID: 11700000, guid: 950add8d241c6479bbab1f10e1035d60, type: 2}
   distantFogDistanceNoiseScale: 0.1
   distantFogDistanceNoiseStrength: 0.5
   distantFogDistanceNoiseMaxDistance: 250
