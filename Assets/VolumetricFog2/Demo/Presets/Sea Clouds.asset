@@ -29,9 +29,9 @@ MonoBehaviour:
   useDetailNoise: 0
   detailTexture: {fileID: 11700000, guid: 950add8d241c6479bbab1f10e1035d60, type: 2}
   detailScale: 3.25
-  detailStrength: 0.653
+  detailStrength: 0.718
   detailOffset: -0.5
-  density: 0.04
+  density: 0.1
   shape: 0
   scaleNoiseWithHeight: 0
   border: 0.061
@@ -50,7 +50,7 @@ MonoBehaviour:
   terrainFogHeight: 25
   terrainFogMinAltitude: 0
   terrainFogMaxAltitude: 150
-  albedo: {r: 0.7688679, g: 0.91048384, b: 1, a: 1}
+  albedo: {r: 0.7688679, g: 0.91048384, b: 1, a: 0}
   enableDepthGradient: 0
   depthGradient:
     serializedVersion: 2

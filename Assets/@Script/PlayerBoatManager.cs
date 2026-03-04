@@ -54,6 +54,15 @@ public class PlayerBoatManager : MonoBehaviour
         this.canDrive = canDrive;
     }
 
+    public void StopBoatMovement()
+    {
+        boatMovement.movementEnabled = false;
+    }
+    public void StartBoatMovement()
+    {
+        boatMovement.movementEnabled = true;
+    }
+
     public void ToggleDrivingMode()
     {
         if(!canDrive) return;

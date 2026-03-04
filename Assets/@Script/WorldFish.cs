@@ -12,6 +12,7 @@ public class WorldFish : MonoBehaviour, IInteractable
     }
 
     private const string SPLASH_SFX_NAME = "splashinsmall";
+    private const string SPLASH_OUT_SFX_NAME = "splashout";
     private const string FLOP_SFX_NAME = "fishsplashup";
     private const string HIT_BOAT_SFX_NAME = "fishhitboat";
 
@@ -132,6 +133,8 @@ public class WorldFish : MonoBehaviour, IInteractable
 
         Quaternion velocityRotation = Quaternion.LookRotation(force.normalized, Vector3.up);
         transform.rotation = Quaternion.Slerp(transform.rotation, velocityRotation, Time.deltaTime * 10f);
+
+        AudioManager.Instance.PlaySFX(SPLASH_OUT_SFX_NAME, transform.position, 0.5f);
 
         StartCoroutine(CheckForWaterOrBoat(cols, colsBoat));
     }

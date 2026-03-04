@@ -5,6 +5,7 @@ public class BoatMovement : MonoBehaviour
 {
     public bool holdingWheel = false;
     public bool movementEnabled = false;
+    public bool respectLimit = true;
 
     [SerializeField] private Vector3 minSizeSea;
     [SerializeField] private Vector3 maxSizeSea;
@@ -34,6 +35,12 @@ public class BoatMovement : MonoBehaviour
     [SerializeField] private InputActionReference moveAction;
     [SerializeField] private InputActionReference turnAction;
 
+    public static BoatMovement Instance { get; private set; }
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
@@ -125,6 +132,8 @@ public class BoatMovement : MonoBehaviour
 
     private void LimitPos()
     {
+        if (!respectLimit)
+            return;
         Vector3 pos = transform.position;
         pos.x = Mathf.Clamp(pos.x, minSizeSea.x, maxSizeSea.x);
         pos.z = Mathf.Clamp(pos.z, minSizeSea.z, maxSizeSea.z);

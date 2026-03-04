@@ -14,6 +14,11 @@ public class PlayerFishingSystem : MonoBehaviour
         fishingRodEquipped = true;
         SetVisible(true);
     }
+    public void UnequipFishingRod()
+    {
+        fishingRodEquipped = false;
+        SetVisible(false);
+    }
 
     [SerializeField] private float minCastForce = 2f;
     [SerializeField] private float maxCastForce = 10f;
