@@ -12,8 +12,75 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2d7aaa03f3e79c4a80d26882ec329e0, type: 3}
   m_Name: RadioDialogue2
   m_EditorClassIdentifier: Assembly-CSharp::RadioDialogue
-  name: Tio
-  lines:
-  - Eu vi essa fisgada ai hein
-  - "Muito bom, agora \xE9 s\xF3 ir buscar o resto, pega no controle do barco e se
-    divirta."
+  dialogueLines:
+  - name: Tio
+    name_:
+      m_TableReference:
+        m_TableCollectionName: GUID:a49673578b4b8c545bc89e9b29a3133e
+      m_TableEntryReference:
+        m_KeyId: 22276931584
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    text: Eu vi essa fisgada ai hein
+    text_:
+      m_TableReference:
+        m_TableCollectionName: GUID:80fdb5f04b97b7945aec943d18a1f312
+      m_TableEntryReference:
+        m_KeyId: 6950944768
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    delay: 0
+    audioClip: {fileID: 0}
+  - name: Tio
+    name_:
+      m_TableReference:
+        m_TableCollectionName: GUID:a49673578b4b8c545bc89e9b29a3133e
+      m_TableEntryReference:
+        m_KeyId: 22276931584
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    text: "Muito bom, agora \xE9 s\xF3 ir buscar o resto, pega no controle do barco
+      e se divirta."
+    text_:
+      m_TableReference:
+        m_TableCollectionName: GUID:80fdb5f04b97b7945aec943d18a1f312
+      m_TableEntryReference:
+        m_KeyId: 160835764224
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    delay: 0
+    audioClip: {fileID: 0}
+  - name: Tio
+    name_:
+      m_TableReference:
+        m_TableCollectionName: GUID:a49673578b4b8c545bc89e9b29a3133e
+      m_TableEntryReference:
+        m_KeyId: 22276931584
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    text: "Muito bom, agora \xE9 s\xF3 ir buscar o resto, pega no controle do barco
+      e se divirta."
+    text_:
+      m_TableReference:
+        m_TableCollectionName: GUID:80fdb5f04b97b7945aec943d18a1f312
+      m_TableEntryReference:
+        m_KeyId: 220793339904
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    delay: 0
+    audioClip: {fileID: 0}
+  references:
+    version: 2
+    RefIds: []

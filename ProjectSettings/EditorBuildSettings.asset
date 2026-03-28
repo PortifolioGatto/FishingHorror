@@ -6,11 +6,17 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Language.unity
+    guid: ea51718a46817074bbea792570f4f958
+  - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: b9ea4e605c66e714ca8c2c38561d92a5
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
   m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: d82000d6edc97fc49aa19a38e9371908, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+    com.unity.localization.addressable-group-rules: {fileID: 11400000, guid: 5ed0fe1587aae164e8d8cecf36471e8f, type: 2}
+    com.unity.localization.settings: {fileID: 11400000, guid: 5a4fe0901a237d447855c537a4c458da, type: 2}
   m_UseUCBPForAssetBundles: 0

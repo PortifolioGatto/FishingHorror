@@ -19,7 +19,13 @@ public class MistEvent_EventController : EventController
     [Header("Monster Circle Settings")]
 
     [SerializeField] private GameObject centerObj;
+    [SerializeField] private BoatScenario boatScenario;
+    [SerializeField] private GameObject monsterPrefab_Chaser;
     [SerializeField] private GameObject monsterPrefab;
+
+    [SerializeField] private AudioClip boatHitSound;
+
+    [SerializeField] private AudioSource tensionSource;
 
     [SerializeField] private float circleRadius = 5f;
     [SerializeField] private int circleSpotCount = 8;
@@ -62,16 +68,20 @@ public class MistEvent_EventController : EventController
 
         yield return new WaitForSeconds(30f);
 
+        BumbController.Instance.TriggerBump(.25f);
+
         PlayerBoatManager.Instance.StopBoatMovement();
 
         yield return new WaitForSeconds(2f);
 
         SpawnMonstersInCircle();
 
-        yield return new WaitForSeconds(15f);
+        boatScenario.HonkHorn();
+
+        yield return new WaitForSeconds(5f);
 
 
-        uncleBoat.GetComponent<BoatScenario>().enabled = false;
+        boatScenario.enabled = false;
 
         while (Vector3.Distance(uncleBoat.transform.position, playerBoat.transform.position) > 130f)
         {
@@ -91,7 +101,9 @@ public class MistEvent_EventController : EventController
         destroyedBoat.SetActive(true);
 
 
-        yield return new WaitForSeconds(30f);
+        yield return new WaitForSeconds(15f);
+
+        BumbController.Instance.TriggerBump(.15f);
 
         PlayerBoatManager.Instance.StartBoatMovement();
 
@@ -103,20 +115,20 @@ public class MistEvent_EventController : EventController
             }
         }
 
-        targetDensity = 0f;
+        //targetDensity = 0f;
 
-        diff = Mathf.Abs(mistFog.profile.albedo.a - targetDensity);
-        Debug.Log($"Increasing mist density... Current: {mistFog.profile.albedo.a}, Target: {targetDensity}, Diff: {diff}");
+        //diff = Mathf.Abs(mistFog.profile.albedo.a - targetDensity);
+        //Debug.Log($"Increasing mist density... Current: {mistFog.profile.albedo.a}, Target: {targetDensity}, Diff: {diff}");
 
-        while (diff > 0.1f)
-        {
-            diff = Mathf.Abs(mistFog.profile.albedo.a - targetDensity);
-            mistFog.profile.albedo.a = Mathf.Lerp(mistFog.profile.albedo.a, targetDensity, Time.deltaTime);
+        //while (diff > 0.1f)
+        //{
+        //    diff = Mathf.Abs(mistFog.profile.albedo.a - targetDensity);
+        //    mistFog.profile.albedo.a = Mathf.Lerp(mistFog.profile.albedo.a, targetDensity, Time.deltaTime);
 
-            Debug.Log($"Increasing mist density... Current: {mistFog.profile.albedo.a}, Target: {targetDensity}, Diff: {diff}");
+        //    Debug.Log($"Increasing mist density... Current: {mistFog.profile.albedo.a}, Target: {targetDensity}, Diff: {diff}");
 
-            yield return null;
-        }
+        //    yield return null;
+        //}
 
         while (Vector3.Distance(destroyedBoat.transform.position, playerBoat.transform.position) > 70)
         {
@@ -125,36 +137,35 @@ public class MistEvent_EventController : EventController
 
         //Player is checking out the destroyed boat, so we can end the event here
 
-        GameObject chaser = Instantiate(monsterPrefab, playerBoat.transform.right * 150f + playerBoat.transform.position, Quaternion.identity);
+        GameObject chaser = Instantiate(monsterPrefab_Chaser, playerBoat.transform.right * 150f + playerBoat.transform.position + Vector3.down * 5f, Quaternion.identity);
 
-        float maxChaseTime = 30f;
+        float maxChaseTime = 45f;
         float chaseTime = maxChaseTime;
 
         float chaseSpeed = 5f;
-        float maxChaseSpeed = 5.5f;
+        float maxChaseSpeed = 15f;
 
-        int maxHits = 5;
+        int maxHits = 3;
         int hits = 0;
 
-        float waitingTime = 3f;
-        float waitingTimer = 0f;
+        float cooldown = 0f;
 
-        bool waiting = false;
+        yield return new WaitForSeconds(1f);
 
-        while( hits < maxHits && chaseTime > 0)
+        tensionSource.Play();
+
+
+        while ( hits < maxHits && chaseTime > 0)
         {
-            if(waiting)
+            if (cooldown > 0f)
             {
-                if( waitingTimer > waitingTime )
-                {
-                    waitingTimer += Time.deltaTime;
-                    waiting = false;
-                }
-
+                cooldown -= Time.deltaTime;
                 yield return null;
+                continue;
             }
 
-            if(Vector3.Distance(chaser.transform.position, playerBoat.transform.position) > 20f)
+
+            if (Vector3.Distance(chaser.transform.position, playerBoat.transform.position) > 39f)
             {
                 Vector3 direction = (playerBoat.transform.position - chaser.transform.position).normalized;
 
@@ -164,17 +175,24 @@ public class MistEvent_EventController : EventController
 
                 chaser.transform.position += direction * chaseSpeed * Time.deltaTime;
 
-                chaseSpeed += Time.deltaTime * 0.5f;
+                chaseSpeed += Time.deltaTime * 1.5f;
                 chaseSpeed = Mathf.Min(chaseSpeed, maxChaseSpeed);
 
                 chaseTime -= Time.deltaTime;
             }
             else
             {
+                
+
                 hits++;
-                waiting = true;
-                waitingTimer = waitingTime;
-            
+                chaseSpeed = -4f;
+
+                cooldown = .5f;
+
+                AudioManager.Instance.PlaySFX(boatHitSound, chaser.transform.position, 3f, .5f);
+
+                BumbController.Instance.TriggerBump(.5f);
+
                 //Boat Hit
             }
 
@@ -184,6 +202,8 @@ public class MistEvent_EventController : EventController
         if(hits >= maxHits)
         {
             //Boat Died
+
+
 
             PlayerMovement.Instance.gameObject.GetComponent<Blocker>().isBlocking = true;
             PlayerCamera.Instance.cameraEnabled = false;
@@ -206,6 +226,8 @@ public class MistEvent_EventController : EventController
         }
         else
         {
+            tensionSource.DOFade(0f, 1f);
+
             Debug.Log("Chaser failed to catch the player in time. Ending event.");
 
             chaser.transform.DOMoveY(chaser.transform.position.y - 50f, 2f).OnComplete(() => Destroy(chaser));
@@ -213,6 +235,7 @@ public class MistEvent_EventController : EventController
 
             PlayerMovement.Instance.gameObject.GetComponent<Blocker>().isBlocking = true;
             PlayerCamera.Instance.cameraEnabled = false;
+            PlayerCamera.Instance.RecenterCamera();
             JumpscareController.instance.PlayJumpscare();
             yield break;
 

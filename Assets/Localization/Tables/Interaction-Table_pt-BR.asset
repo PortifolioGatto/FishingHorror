@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Interaction-Table_pt-BR
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: pt-BR
+  m_SharedData: {fileID: 11400000, guid: acb99a9295a63f34b804c4519f97e78e, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 5055119360
+    m_Localized: Pegar Vara de pesca
+    m_Metadata:
+      m_Items: []
+  - m_Id: 315286814720
+    m_Localized: Dirigir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 432907681792
+    m_Localized: Parar de dirigir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 819060473856
+    m_Localized: Pegar o
+    m_Metadata:
+      m_Items: []
+  - m_Id: 31059719684096
+    m_Localized: Caixa
+    m_Metadata:
+      m_Items: []
+  - m_Id: 31107375366144
+    m_Localized: Colocar o peixe na caixa
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

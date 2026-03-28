@@ -26,13 +26,15 @@ public class WeatherController : MonoBehaviour
     private void Awake()
     {
         instance = this;
+
+        SetClearWeather();
     }
 
     private void Start()
     {
         rainVolume = rain_audioLoop.volume; // Store the original volume of the rain audio loop
 
-        SetClearWeather();
+        
     }
 
     [ContextMenu("Set Clear Weather")]

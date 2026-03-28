@@ -1,12 +1,13 @@
 using UnityEngine;
+using UnityEngine.Localization;
 
 public class DriveInteractable : MonoBehaviour, IInteractable
 {
     public bool isHovering { get; set; }
     [field: SerializeField] public bool canInteract { get; set; } = true;
 
-    [SerializeField] private string interactionText = "Drive the boat";
-    [SerializeField] private string stopInteractionText = "Stop driving the boat";
+    public LocalizedString interactionText;
+    public LocalizedString stopInteractionText;
 
     public string GetInteractionText()
     {
@@ -14,11 +15,11 @@ public class DriveInteractable : MonoBehaviour, IInteractable
 
         if (PlayerBoatManager.Instance.holdingWheel)
         {
-            return stopInteractionText;
+            return stopInteractionText.GetLocalizedString();
         }
         else
         {
-            return interactionText;
+            return interactionText.GetLocalizedString();
         }
     }
 

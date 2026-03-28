@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class FishingSpotSpawner : MonoBehaviour
@@ -16,6 +17,10 @@ public class FishingSpotSpawner : MonoBehaviour
     [SerializeField] private float heightOffset = 0.5f;
     [SerializeField] private Vector2 spawnAreaMin;
     [SerializeField] private Vector2 spawnAreaMax;
+
+    [Space]
+    [SerializeField] private FishData[] worldFishs;
+    [Space]
 
     [SerializeField]
     private bool randomSpawningEnabled = false;
@@ -146,6 +151,14 @@ public class FishingSpotSpawner : MonoBehaviour
         Vector3 spawnPosition = GetRandomSpawnPosition();
         FishingSpot newFishingSpot = Instantiate(fishingSpotPrefab, spawnPosition, Quaternion.identity);
 
+        FishData[] randomFishList = new FishData[UnityEngine.Random.Range(2, worldFishs.Length)];
+
+        for (int i = 0; i < randomFishList.Length; i++)
+        {
+            randomFishList[i] = worldFishs[UnityEngine.Random.Range(0, worldFishs.Length)];
+        }
+
+        newFishingSpot.SetFishes(randomFishList);
 
         RegisterFishingSpot(newFishingSpot);
     }

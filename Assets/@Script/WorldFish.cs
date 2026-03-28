@@ -1,5 +1,6 @@
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Localization;
 
 
 public class WorldFish : MonoBehaviour, IInteractable
@@ -10,6 +11,9 @@ public class WorldFish : MonoBehaviour, IInteractable
         Landed,
         Caught
     }
+
+    public LocalizedString interactionText;
+
 
     private const string SPLASH_SFX_NAME = "splashinsmall";
     private const string SPLASH_OUT_SFX_NAME = "splashout";
@@ -204,6 +208,6 @@ public class WorldFish : MonoBehaviour, IInteractable
 
     public string GetInteractionText()
     {
-        return $"Catch {fishData.fishName}";
+        return interactionText.GetLocalizedString() + fishData.fishName.GetLocalizedString();
     }
 }

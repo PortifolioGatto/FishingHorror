@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: UI-Table_en
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 9e5af68498f98d543ab3bed149eec0c9, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 16090333184
+    m_Localized: Play
+    m_Metadata:
+      m_Items: []
+  - m_Id: 218390003712
+    m_Localized: Options
+    m_Metadata:
+      m_Items: []
+  - m_Id: 500628914176
+    m_Localized: Quit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 577195933696
+    m_Localized: Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 621294845952
+    m_Localized: Sensibility
+    m_Metadata:
+      m_Items: []
+  - m_Id: 782234484736
+    m_Localized: Sound Effects Volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1167619719168
+    m_Localized: Music Volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1756198010880
+    m_Localized: Master Volume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2098289639424
+    m_Localized: Target FrameRate
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

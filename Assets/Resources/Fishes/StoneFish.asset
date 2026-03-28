@@ -12,7 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf23ab141c063ba46a314d245d6bc0d5, type: 3}
   m_Name: StoneFish
   m_EditorClassIdentifier: Assembly-CSharp::FishData
-  fishName: StoneFish
+  fishName:
+    m_TableReference:
+      m_TableCollectionName: GUID:a61aec8fffe28704bb8a6fd487390bcf
+    m_TableEntryReference:
+      m_KeyId: 667058896896
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   fishPrefab: {fileID: 5002205890399257650, guid: b2ef6eb39035c8e47adc377587c927ed, type: 3}
   fishBaseDifficulty: 0.1
   minTriesToCatch: 2
@@ -24,3 +32,6 @@ MonoBehaviour:
   visualHeightOffset: -0.5
   canJump: 0
   canBite: 1
+  references:
+    version: 2
+    RefIds: []

@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using UnityEngine;
 
@@ -82,6 +83,8 @@ public class SpawnObserver_EventController : EventController
         Vector3 directionToPlayer = (player.transform.position - observer.transform.position).normalized;
         float playerCanSeeObserver = Vector3.Dot(player.transform.forward, directionToPlayer);
 
+        
+
         while (!playerSawObserver)
         {
             directionToPlayer = (observer.transform.position - player.transform.position).normalized;
@@ -89,6 +92,18 @@ public class SpawnObserver_EventController : EventController
             // O jogador pode ver o observador se estiver dentro de um certo ângulo e distância
 
             Debug.Log($"Distance to player: {distanceToPlayer}, Player cannot see observer: {playerCanSeeObserver}");
+
+            if (distanceToPlayer <= 150)
+            {
+                Debug.Log("Player is close to the observer!");
+                observer.transform.DOMoveY(observer.transform.position.y - 50, 1f).onComplete += () =>
+                {
+                    observerSpawned = false;
+                    Destroy(observer);
+                };
+
+                yield break;
+            }
 
             if (playerCanSeeObserver > 0.9f)
             {
@@ -105,6 +120,18 @@ public class SpawnObserver_EventController : EventController
             // O jogador pode ver o observador se estiver dentro de um certo ângulo e distância
 
             Debug.Log($"Distance to player: {distanceToPlayer}, Player can see observer: {playerCanSeeObserver}");
+
+            if (distanceToPlayer <= 150)
+            {
+                Debug.Log("Player is close to the observer!");
+                observer.transform.DOMoveY(observer.transform.position.y - 50, 1f).onComplete += () =>
+                {
+                    observerSpawned = false;
+                    Destroy(observer);
+                };
+
+                yield break;
+            }
 
             if (playerCanSeeObserver < 0.4f)
             {

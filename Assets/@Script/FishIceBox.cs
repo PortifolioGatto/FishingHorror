@@ -3,6 +3,7 @@ using System.Collections;
 using TMPro;
 using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
+using UnityEngine.Localization;
 
 public class FishIceBox : MonoBehaviour, IInteractable
 {
@@ -17,8 +18,8 @@ public class FishIceBox : MonoBehaviour, IInteractable
     [SerializeField] private float lidOpenAngle = 90f;
     [SerializeField] private float lidClosedAngle = 0f;
 
-    [SerializeField] private string interactionText = "Ice Box";
-    [SerializeField] private string storeFishInteractionText = "Store fish in ice box";
+    [SerializeField] private LocalizedString interactionText;
+    [SerializeField] private LocalizedString storeFishInteractionText;
 
     private bool waitingTween;
     private bool isOpen;
@@ -100,9 +101,9 @@ public class FishIceBox : MonoBehaviour, IInteractable
     {
         if (PlayerFishingSystem.Instance.IsHoldingFish())
         {
-            return storeFishInteractionText;
+            return storeFishInteractionText.GetLocalizedString();
         }
 
-        return interactionText;
+        return interactionText.GetLocalizedString();
     }
 }

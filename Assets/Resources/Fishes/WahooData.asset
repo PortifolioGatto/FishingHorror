@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf23ab141c063ba46a314d245d6bc0d5, type: 3}
+  m_Name: WahooData
+  m_EditorClassIdentifier: Assembly-CSharp::FishData
+  fishName:
+    m_TableReference:
+      m_TableCollectionName: GUID:a61aec8fffe28704bb8a6fd487390bcf
+    m_TableEntryReference:
+      m_KeyId: 833816035328
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  fishPrefab: {fileID: 2021603890451622914, guid: 1162a519f4b8ce948b0423550b063166, type: 3}
+  fishBaseDifficulty: 0.15
+  minTriesToCatch: 1
+  maxTriesToCatch: 3
+  minSizeVariation: 0.75
+  maxSizeVariation: 1.5
+  maxPrice: 100
+  sizeInBox: 1
+  visualHeightOffset: -1.5
+  canJump: 1
+  canBite: 1
+  references:
+    version: 2
+    RefIds: []

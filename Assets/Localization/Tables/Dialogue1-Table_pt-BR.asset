@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Dialogue1-Table_pt-BR
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: pt-BR
+  m_SharedData: {fileID: 11400000, guid: a49673578b4b8c545bc89e9b29a3133e, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 22276931584
+    m_Localized: Tio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 78077952000
+    m_Localized: "Bem vindo ao \"Vocatio Abyssi\" Hugo! Aqui \xE9 onde nos tornaremos
+      ricos meu jovem."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1503105318912
+    m_Localized: "Como te disse, os peixes do mundo todo vem at\xE9 esse local a
+      cada 8 anos, estranho n\xE3o? Parece que as regras sobre habitats n\xE3o existem
+      aqui."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1580305678336
+    m_Localized: "Hoje \xE9 o ultimo dia ent\xE3o n\xE3o vamos encontrar mais ningu\xE9m
+      por aqui."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1620063485952
+    m_Localized: "Agora, vamos as instru\xE7\xF5es, seu barco veio equipado com um
+      sonar, ele vai te guiar na localiza\xE7\xE3o dos peixes mais pr\xF3ximos, basta
+      ir e pegar, n\xE3o importa o que voc\xEA pescar, vale dinheiro? Traz para casa"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1704306081792
+    m_Localized: "Eu vou estar aqui por perto, mas cada um no seu quadrado hein,
+      seu Tio tamb\xE9m precisa de um dinheiro."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1751588470784
+    m_Localized: "Como voc\xEA deu um jeito de quebrar o microfone do seu r\xE1dio
+      ent\xE3o n\xE3o vai ter como voc\xEA entrar em contato comigo, mas pelo menos
+      eu posso te incomodar bastante."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1839069069312
+    m_Localized: Grandes expectativas hein, bem grandes. Boa Sorte marujo!
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

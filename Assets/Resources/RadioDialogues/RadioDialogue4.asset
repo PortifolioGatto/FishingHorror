@@ -12,11 +12,139 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2d7aaa03f3e79c4a80d26882ec329e0, type: 3}
   m_Name: RadioDialogue4
   m_EditorClassIdentifier: Assembly-CSharp::RadioDialogue
-  name: Tio
-  lines:
-  - "Ei, Hugo, est\xE1 me ouvindo?..."
-  - Eu estou vendo alguma coisa ao longe...
-  - ...
-  - ...
-  - ...
-  - Hugo...A gente preci...
+  dialogueLines:
+  - name: Tio
+    name_:
+      m_TableReference:
+        m_TableCollectionName: GUID:a49673578b4b8c545bc89e9b29a3133e
+      m_TableEntryReference:
+        m_KeyId: 22276931584
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    text: "Ei, Hugo, est\xE1 me ouvindo?..."
+    text_:
+      m_TableReference:
+        m_TableCollectionName: GUID:278821f23992dbd408ca164f268d33f5
+      m_TableEntryReference:
+        m_KeyId: 7890468864
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    delay: 0
+    audioClip: {fileID: 0}
+  - name: Tio
+    name_:
+      m_TableReference:
+        m_TableCollectionName: GUID:a49673578b4b8c545bc89e9b29a3133e
+      m_TableEntryReference:
+        m_KeyId: 22276931584
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    text: Eu estou vendo alguma coisa ao longe...
+    text_:
+      m_TableReference:
+        m_TableCollectionName: GUID:278821f23992dbd408ca164f268d33f5
+      m_TableEntryReference:
+        m_KeyId: 134130630656
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    delay: 0
+    audioClip: {fileID: 0}
+  - name: Tio
+    name_:
+      m_TableReference:
+        m_TableCollectionName: GUID:a49673578b4b8c545bc89e9b29a3133e
+      m_TableEntryReference:
+        m_KeyId: 22276931584
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    text: ...
+    text_:
+      m_TableReference:
+        m_TableCollectionName: GUID:278821f23992dbd408ca164f268d33f5
+      m_TableEntryReference:
+        m_KeyId: 358882410496
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    delay: 0
+    audioClip: {fileID: 0}
+  - name: Tio
+    name_:
+      m_TableReference:
+        m_TableCollectionName: GUID:a49673578b4b8c545bc89e9b29a3133e
+      m_TableEntryReference:
+        m_KeyId: 22276931584
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    text: ...
+    text_:
+      m_TableReference:
+        m_TableCollectionName: GUID:278821f23992dbd408ca164f268d33f5
+      m_TableEntryReference:
+        m_KeyId: 358882410496
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    delay: 0
+    audioClip: {fileID: 0}
+  - name: Tio
+    name_:
+      m_TableReference:
+        m_TableCollectionName: GUID:a49673578b4b8c545bc89e9b29a3133e
+      m_TableEntryReference:
+        m_KeyId: 22276931584
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    text: ...
+    text_:
+      m_TableReference:
+        m_TableCollectionName: GUID:278821f23992dbd408ca164f268d33f5
+      m_TableEntryReference:
+        m_KeyId: 358882410496
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    delay: 0
+    audioClip: {fileID: 0}
+  - name: Tio
+    name_:
+      m_TableReference:
+        m_TableCollectionName: GUID:a49673578b4b8c545bc89e9b29a3133e
+      m_TableEntryReference:
+        m_KeyId: 22276931584
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    text: Hugo...A gente preci...
+    text_:
+      m_TableReference:
+        m_TableCollectionName: GUID:278821f23992dbd408ca164f268d33f5
+      m_TableEntryReference:
+        m_KeyId: 210567626752
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    delay: 0
+    audioClip: {fileID: 0}
+  references:
+    version: 2
+    RefIds: []

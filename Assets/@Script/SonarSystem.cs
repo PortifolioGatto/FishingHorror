@@ -50,7 +50,7 @@ public class SonarSystem : MonoBehaviour
 
                 Collider[] hits = Physics.OverlapSphere(
                 boatObject.transform.position,
-                scanRadius * 4f,
+                scanRadius * 30f,
                 scanLayerMask
                 );
 
@@ -75,7 +75,7 @@ public class SonarSystem : MonoBehaviour
 
                     float distance = new Vector2(localPos.x, localPos.z).magnitude;
 
-                    if (distance > scanRadius * 4)
+                    if (distance > scanRadius * 30)
                         continue;
 
                     float distancePercent = distance / scanRadius;

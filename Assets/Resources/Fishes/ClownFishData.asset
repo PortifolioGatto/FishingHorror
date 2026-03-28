@@ -12,7 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf23ab141c063ba46a314d245d6bc0d5, type: 3}
   m_Name: ClownFishData
   m_EditorClassIdentifier: Assembly-CSharp::FishData
-  fishName: ClownFish
+  fishName:
+    m_TableReference:
+      m_TableCollectionName: GUID:a61aec8fffe28704bb8a6fd487390bcf
+    m_TableEntryReference:
+      m_KeyId: 292557881344
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   fishPrefab: {fileID: 5982172961409375543, guid: 8de1259c581cd324e8d350ec791581e5, type: 3}
   fishBaseDifficulty: 0.3
   minTriesToCatch: 1
@@ -24,3 +32,6 @@ MonoBehaviour:
   visualHeightOffset: -0.75
   canJump: 1
   canBite: 1
+  references:
+    version: 2
+    RefIds: []

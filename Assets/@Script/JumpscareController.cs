@@ -26,6 +26,8 @@ public class JumpscareController : MonoBehaviour
     
     public void GoToMenu()
     {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         SceneManager.LoadScene("MainMenu");
     }
 }

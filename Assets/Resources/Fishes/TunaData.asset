@@ -12,7 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf23ab141c063ba46a314d245d6bc0d5, type: 3}
   m_Name: TunaData
   m_EditorClassIdentifier: Assembly-CSharp::FishData
-  fishName: Tuna
+  fishName:
+    m_TableReference:
+      m_TableCollectionName: GUID:a61aec8fffe28704bb8a6fd487390bcf
+    m_TableEntryReference:
+      m_KeyId: 796511895552
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   fishPrefab: {fileID: 3691125212785284346, guid: 33ba36026e1709a4e8e5191bb7a87e27, type: 3}
   fishBaseDifficulty: 0.2
   minTriesToCatch: 3
@@ -24,3 +32,6 @@ MonoBehaviour:
   visualHeightOffset: -1.5
   canJump: 1
   canBite: 1
+  references:
+    version: 2
+    RefIds: []

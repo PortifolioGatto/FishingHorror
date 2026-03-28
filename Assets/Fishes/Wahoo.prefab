@@ -52,6 +52,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wahoo
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 246176799e0b728459d91f369b197369, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -133,6 +137,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ef1da89f08f5f7459a75ff23ac9e52c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldFish
+  interactionText:
+    m_TableReference:
+      m_TableCollectionName: GUID:acb99a9295a63f34b804c4519f97e78e
+    m_TableEntryReference:
+      m_KeyId: 819060473856
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   minFloppingTime: 0.15
   maxFloppingTime: 1
   waterLayer:
@@ -143,3 +156,6 @@ MonoBehaviour:
     m_Bits: 8
   fishData: {fileID: 0}
   <canInteract>k__BackingField: 1
+  references:
+    version: 2
+    RefIds: []

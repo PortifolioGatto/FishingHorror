@@ -100,6 +100,9 @@ public class RainController : MonoBehaviour
         clouds.profile.albedo = currentColor;
 
         // For rain and thunder, we can just switch at the midpoint of each zone for simplicity
+
+        if (WeatherController.instance == null) return;
+
         WeatherController.instance.EnableRain(from.enableRain);
         WeatherController.instance.EnableThunder(from.enableThunder);
     }

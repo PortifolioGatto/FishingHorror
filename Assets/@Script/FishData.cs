@@ -1,9 +1,10 @@
 using UnityEngine;
+using UnityEngine.Localization;
 
 [CreateAssetMenu(fileName = "FishData", menuName = "ScriptableObjects/FishData", order = 1)]
 public class FishData : ScriptableObject
 {
-    public string fishName;
+    public LocalizedString fishName;
     public GameObject fishPrefab;
     public float fishBaseDifficulty;
 

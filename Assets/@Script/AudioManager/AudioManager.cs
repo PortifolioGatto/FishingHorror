@@ -27,13 +27,17 @@ public class AudioManager : MonoBehaviour
     {
         if(Instance == null)
         {
+            InitializeMixer();
+
             Instance = this;
             DontDestroyOnLoad(this);
             return;
         }
 
         Destroy(this.gameObject);
+
         
+
     }
     private void Start()
     {
@@ -43,24 +47,64 @@ public class AudioManager : MonoBehaviour
 
     private void InitializeMixer()
     {
-
+        Debug.Log("Initializing Audio Mixer with saved settings... " + PlayerPrefs.GetFloat("MasterVolume", 1f));
+        SetMasterVolume(PlayerPrefs.GetFloat("MasterVolume", 1f));
+        SetMusicVolume(PlayerPrefs.GetFloat("MusicVolume", 1f));
+        SetSFXVolume(PlayerPrefs.GetFloat("SFXVolume", 1f));
     }
 
     public void SetMasterVolume(float volume)
     {
         mainMixer.SetFloat(MasterVolumeParam, Mathf.Log10(volume) * 20);
+        PlayerPrefs.SetFloat("MasterVolume", volume);
+        PlayerPrefs.Save();
+        Debug.Log($"Master volume set to {volume} (dB: {Mathf.Log10(volume) * 20})");
     }
-
     public void SetMusicVolume(float volume)
     {
         mainMixer.SetFloat(MusicVolumeParam, Mathf.Log10(volume) * 20);
+        PlayerPrefs.SetFloat("MusicVolume", volume);
+        PlayerPrefs.Save();
     }
-
     public void SetSFXVolume(float volume)
     {
         mainMixer.SetFloat(SFXVolumeParam, Mathf.Log10(volume) * 20);
+        PlayerPrefs.SetFloat("SFXVolume", volume);
+        PlayerPrefs.Save();
     }
 
+    public float GetMasterVolume()
+    {
+        mainMixer.GetFloat(MasterVolumeParam, out float volume);
+
+        float linearVolume = Mathf.Pow(10, volume / 20);
+
+        Debug.Log($"Master volume retrieved: {linearVolume} (dB: {volume})");
+
+        return linearVolume;
+    }
+    public float GetMusicVolume()
+    {
+        mainMixer.GetFloat(MusicVolumeParam, out float volume);
+        return Mathf.Pow(10, volume / 20);
+    }
+    public float GetSFXVolume()
+    {
+        mainMixer.GetFloat(SFXVolumeParam, out float volume);
+        return Mathf.Pow(10, volume / 20);
+    }
+
+    public AudioSource PlaySFX(AudioClip clip, Vector3 position, float volume = 1f, float pitchDelta = .05f)
+    {
+        AudioSource _as = Instantiate(sfxPlayerPrefab, position, Quaternion.identity);
+        _as.clip = clip;
+        _as.volume = volume;
+        _as.outputAudioMixerGroup = sfxMixerGroup;
+        _as.pitch = Random.Range(1f - pitchDelta, 1f + pitchDelta);
+        _as.Play();
+        Destroy(_as.gameObject, clip.length + 1f);
+        return _as;
+    }
     public AudioSource PlaySFX(string sfxName, Vector3 position, float volume = 1f, float pitchDelta = .05f)
     {
         if (sfxDatabase.sfxDictionary.Count == 0)

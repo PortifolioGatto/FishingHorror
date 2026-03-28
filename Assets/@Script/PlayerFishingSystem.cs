@@ -351,10 +351,23 @@ public class PlayerFishingSystem : MonoBehaviour
             fishingRod.CurrentFish.transform.localScale = scaling;
         });
 
+        StartCoroutine(EWaitSeconds(0.3f, () =>
+        {
+            AudioManager.Instance.PlaySFX("iceplace", FishIceBox.Instance.transform.position, 0.5f);
+        }));
+
+
         fishingRod.DisposeFish();
         fishingRod.ResetHook();
 
         Debug.Log("Fish stored in icebox");
+    }
+
+
+    private IEnumerator EWaitSeconds(float seconds, Action onComplete)
+    {
+        yield return new WaitForSeconds(seconds);
+        onComplete?.Invoke();
     }
 
     public SerializedFishData[] GetSerializedFish()

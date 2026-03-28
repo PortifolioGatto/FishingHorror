@@ -12,6 +12,8 @@ public class BoatScenario : MonoBehaviour
     [SerializeField] private float minMoveTime = 2f;
     [SerializeField] private float maxMoveTime = 10f;
 
+    [SerializeField] private AudioSource boatHornSource;
+
     private float moveTimer;
 
     private void Start()
@@ -58,6 +60,14 @@ public class BoatScenario : MonoBehaviour
         }
     }
 
+    [ContextMenu("Honk Horn")]
+    public void HonkHorn()
+    {
+        if (boatHornSource != null)
+        {
+            boatHornSource.Play();
+        }
+    }
 
     private void OnDrawGizmosSelected()
     {

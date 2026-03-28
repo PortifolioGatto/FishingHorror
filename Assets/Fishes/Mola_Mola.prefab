@@ -92,9 +92,6 @@ PrefabInstance:
       addedObject: {fileID: 1987034117721832204}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0ec54c01e442df64e9854be01e50d799, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2961378244796209051}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0ec54c01e442df64e9854be01e50d799, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 7857596377024562965}
   m_SourcePrefab: {fileID: 100100000, guid: 0ec54c01e442df64e9854be01e50d799, type: 3}
 --- !u!1 &5770393720385105363 stripped
@@ -141,6 +138,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ef1da89f08f5f7459a75ff23ac9e52c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  interactionText:
+    m_TableReference:
+      m_TableCollectionName: GUID:acb99a9295a63f34b804c4519f97e78e
+    m_TableEntryReference:
+      m_KeyId: 819060473856
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   minFloppingTime: 0.15
   maxFloppingTime: 1
   waterLayer:
@@ -151,29 +157,9 @@ MonoBehaviour:
     m_Bits: 8
   fishData: {fileID: 0}
   <canInteract>k__BackingField: 0
---- !u!136 &2961378244796209051
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5770393720385105363}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.41
-  m_Height: 2.52
-  m_Direction: 2
-  m_Center: {x: 0, y: 0, z: 0}
+  references:
+    version: 2
+    RefIds: []
 --- !u!64 &7857596377024562965
 MeshCollider:
   m_ObjectHideFlags: 0

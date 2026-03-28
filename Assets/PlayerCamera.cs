@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -20,7 +21,23 @@ public class PlayerCamera : MonoBehaviour, IListenConfigChanged
     [SerializeField] private float headBobFrequency = 1.5f;
     [SerializeField] private float headBobAmplitude = 0.05f;
     [SerializeField] private float headBobSmoothing = 5f;
-    
+
+    public class ShakeData
+    {
+        public float duration;
+        public float magnitude;
+
+        public ShakeData(float duration, float magnitude)
+        {
+            this.duration = duration;
+            this.magnitude = magnitude;
+        }
+    }
+
+    private ShakeData currentShake;
+
+    private Vector3 shakeOffset;
+
     private Vector3 initialCameraPosition;
     private float headBobOffset = 0f;
     private float headBobTimer = 0f;
@@ -43,6 +60,9 @@ public class PlayerCamera : MonoBehaviour, IListenConfigChanged
     private float verticalRotation = 0f;
     private float horizontalRotation = 0f;
 
+    private bool shaking = false;
+    private bool shakeEnding = false;
+
     public float GetHorizontalRotation() => horizontalRotation;
 
     private void Start()
@@ -57,16 +77,22 @@ public class PlayerCamera : MonoBehaviour, IListenConfigChanged
 
     private void Update()
     {
-        if(!cameraEnabled) return;
+        float mouseX = 0f;
+        float mouseY = 0f;
+
+        if (cameraEnabled)
+        {
+            Vector2 mouseDeltaValue = mouseDelta.action.ReadValue<Vector2>();
+            mouseX = mouseDeltaValue.x * sensitivity;
+            mouseY = mouseDeltaValue.y * sensitivity;
+        }
 
 
         HandleHeadBob();
 
-        
+        HandleShake();
 
-        Vector2 mouseDeltaValue = mouseDelta.action.ReadValue<Vector2>();
-        float mouseX = mouseDeltaValue.x * sensitivity;
-        float mouseY = mouseDeltaValue.y * sensitivity;
+        
 
         horizontalRotation += mouseX;
         verticalRotation -= mouseY;
@@ -78,7 +104,7 @@ public class PlayerCamera : MonoBehaviour, IListenConfigChanged
 
     private void LateUpdate()
     {
-        transform.position = playerHeadPos.position + Vector3.up * headBobOffset;
+        transform.position = playerHeadPos.position + shakeOffset + (Vector3.up * headBobOffset);
     }
 
     private void HandleHeadBob()
@@ -96,9 +122,53 @@ public class PlayerCamera : MonoBehaviour, IListenConfigChanged
         }
     }
 
+    private void HandleShake()
+    {
+        if(!shaking) return;
+
+        if (currentShake != null)
+        {
+            shakeOffset = Random.insideUnitSphere * currentShake.magnitude;
+            currentShake.duration -= Time.deltaTime;
+            if (currentShake.duration <= 0f && !shakeEnding)
+            {
+                DOTween.To(() => currentShake.magnitude, x => currentShake.magnitude = x, 0f, .5f).SetEase(Ease.OutQuad).onComplete += () =>
+                {
+                    shakeOffset = Vector3.zero;
+                    currentShake = null;
+                    shaking = false;
+                    shakeEnding = false;
+                };
+                shakeEnding = true;
+            }
+        }
+    }
+
     public void AddHorizontalRotation(float delta)
     {
         horizontalRotation += delta;
+    }
+
+
+    public void ShakeCamera(float duration, float magnitude)
+    {
+        currentShake = new ShakeData(duration, magnitude);
+        shakeOffset = Vector3.zero;
+        shaking = true;
+        shakeEnding = false;
+    }
+
+    public void BumpCamera()
+    {
+        ShakeCamera(.25f, .1f);
+    }
+
+
+    [ContextMenu("Recenter Camera")]
+    public void RecenterCamera()
+    {
+        DOTween.To(() => verticalRotation, x => verticalRotation = x, 0f, .5f).SetEase(Ease.OutQuad);
+        //DOTween.To(() => horizontalRotation, x => horizontalRotation = x, Random.Range(0f,360f), .5f).SetEase(Ease.OutQuad);
     }
 
     public void OnConfigChanged()

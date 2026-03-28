@@ -68,6 +68,7 @@ public class FishingMinigameManager : MonoBehaviour
         int maxFailsAllowed = 5;
         int currentFailCount = 0;
 
+
         while (currentTryCount < amountOfTriesToSuccessfullyCatchFish)
         {
             bool isSuccessfulCatch = false;

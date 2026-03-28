@@ -5,6 +5,8 @@ public class RadioManager : MonoBehaviour
 {
     public RadioDialogue testDialogue;
 
+    public GameObject radioObj;
+
     [Header("UI")]
     [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private CanvasGroup dialogueCanvasGroup;
@@ -36,7 +38,7 @@ public class RadioManager : MonoBehaviour
     private System.Collections.IEnumerator EPlayDialogue(RadioDialogue dialogue)
     {
         int lineIndex = 0;
-        dialogueText.text = (dialogue.name == string.Empty) ? "" : dialogue.name + ": " ;
+        dialogueText.text = "";
 
         dialogueCanvasGroup.alpha = 0f;
         dialoguePanel.SetActive(true);
@@ -47,16 +49,25 @@ public class RadioManager : MonoBehaviour
 
         yield return dialogueCanvasGroup.DOFade(1f, fadeDuration).WaitForCompletion();
 
-        while (lineIndex < dialogue.lines.Length)
+        
+
+        while (lineIndex < dialogue.dialogueLines.Length)
         {
-            string line = dialogue.lines[lineIndex];
-            dialogueText.text = (dialogue.name == string.Empty) ? "" : dialogue.name + ": ";
-            foreach (char c in line)
+            RadioDialogue.DialogueLine line = dialogue.dialogueLines[lineIndex];
+
+            if(line.audioClip != null)
+            {
+                AudioManager.Instance.PlaySFX(line.audioClip, radioObj.transform.position, 1f, 0f);
+                Debug.Log($"Playing audio clip: {line.audioClip.name}");
+            }
+
+            dialogueText.text = (line.name_.GetLocalizedString() == string.Empty) ? "" : line.name_.GetLocalizedString() + ": ";
+            foreach (char c in line.text_.GetLocalizedString())
             {
                 dialogueText.text += c;
                 yield return new WaitForSeconds(typewriterSpeed);
             }
-            yield return new WaitForSeconds(3f); // Wait before showing the next line
+            yield return new WaitForSeconds((line.delay <= 0 ? 3f : line.delay)); // Wait before showing the next line
             lineIndex++;
         }
 

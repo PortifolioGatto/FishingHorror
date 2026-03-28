@@ -52,6 +52,11 @@ public class JumpingFish_EventController : EventController
     {
         FishData randomFish = possibleFishes[Random.Range(0, possibleFishes.Length)];
 
+        while(randomFish != null && randomFish.canJump == false)
+        {
+            randomFish = possibleFishes[Random.Range(0, possibleFishes.Length)];
+        }
+
         BoatMovement boatMovement = FindAnyObjectByType<BoatMovement>();
 
         if (boatMovement == null) return;

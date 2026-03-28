@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Dialogue1-Table_en
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: a49673578b4b8c545bc89e9b29a3133e, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 22276931584
+    m_Localized: "Uncle\t"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 78077952000
+    m_Localized: "Welcome to the \u201CVocatio Abyssi\u201D, Hugo! This is where
+      we\u2019re gonna get rich, kid"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1503105318912
+    m_Localized: "Like I told you, fish from all over the world show up here every
+      8 years. Weird, right? It\u2019s like the usual habitat rules just don\u2019t
+      exist here."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1580305678336
+    m_Localized: "Today\u2019s the last day, so we won\u2019t be running into anyone
+      else out here."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1620063485952
+    m_Localized: "Alright, let\u2019s go over the basics. Your boat came equipped
+      with a sonar. It\u2019ll help you locate the nearest fish, just head over and
+      grab \u2019em. Doesn\u2019t matter what you catch. If it\u2019s worth money,
+      bring it back."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1704306081792
+    m_Localized: "I\u2019ll be somewhere around here, but everyone sticks to their
+      own turf, got it? Your uncle\u2019s trying to make a buck too."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1751588470784
+    m_Localized: "And since you somehow managed to break the microphone on your radio,
+      you won\u2019t be able to contact me. But hey, at least I can still bother
+      the hell out of you."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1839069069312
+    m_Localized: 'Big expectations, kid. Real big ones.
+
+'
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

@@ -54,7 +54,13 @@ public class FishingSpot : MonoBehaviour
     
     private void Start()
     {
-        FishingSpotSpawner.Instance.RegisterFishingSpot(this);
+        if(FishingSpotSpawner.Instance != null)
+            FishingSpotSpawner.Instance.RegisterFishingSpot(this);
+    }
+
+    public void SetFishes(FishData[] fishes)
+    {
+        fishData = fishes;
     }
 
     public void MoveSpot(float radius)

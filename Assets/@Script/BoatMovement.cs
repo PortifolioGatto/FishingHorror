@@ -25,6 +25,9 @@ public class BoatMovement : MonoBehaviour
     [SerializeField] private AcceleratorPoints acceleratorLeft;
 
     [SerializeField] private AudioSource boatAudioSource;
+    [SerializeField] private AudioSource boatAudioSource_Broken;
+
+    [SerializeField] private WaveFollower waveFollower;
 
     private int throttleDirection = 0; // -1 for reverse, 0 for idle, 1 for forward
     public int Throttle => throttleDirection;
@@ -50,8 +53,40 @@ public class BoatMovement : MonoBehaviour
 
     private void Update()
     {
+        if (throttleDirection != 0)
+        {
+
+            if (movementEnabled == false)
+            {
+                if (boatAudioSource.isPlaying)
+                    boatAudioSource.Stop();
+
+                if (!boatAudioSource_Broken.isPlaying)
+                    boatAudioSource_Broken.Play();
+            }
+            else
+            {
+                if (boatAudioSource_Broken.isPlaying)
+                    boatAudioSource_Broken.Stop();
+
+                if (!boatAudioSource.isPlaying)
+                    boatAudioSource.Play();
+            }
+
+
+        }
+        else
+        {
+            if (boatAudioSource.isPlaying)
+                boatAudioSource.Stop();
+
+            if (boatAudioSource_Broken.isPlaying)
+                boatAudioSource_Broken.Stop();
+        }
+
         if (!movementEnabled)
         {
+
             return;
         }
 
@@ -64,16 +99,7 @@ public class BoatMovement : MonoBehaviour
             inputVertical = 0f;
         }
 
-        if (throttleDirection != 0)
-        {
-            if (!boatAudioSource.isPlaying)
-                boatAudioSource.Play();
-        }
-        else
-        {
-            if (boatAudioSource.isPlaying)
-                boatAudioSource.Stop();
-        }
+        
 
         if (lastVerticalInput != inputVertical && inputVertical != 0f)
         {
@@ -128,6 +154,14 @@ public class BoatMovement : MonoBehaviour
 
 
         LimitPos();
+    }
+
+    public void ShakeBoat(float magnitude, float duration)
+    {
+        if (waveFollower != null)
+        {
+            waveFollower.Shake(magnitude, duration);
+        }
     }
 
     private void LimitPos()

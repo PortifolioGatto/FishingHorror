@@ -1,13 +1,16 @@
 using UnityEngine;
+using UnityEngine.Localization;
 
 public class FishingRodInteractable : MonoBehaviour, IInteractable
 {
     public bool isHovering { get; set; }
     public bool canInteract { get; set; }
 
+    public LocalizedString interactionText;
+
     public string GetInteractionText()
     {
-        return "Pegar vara de pesca";
+        return interactionText.GetLocalizedString();
     }
 
     public void Interact()

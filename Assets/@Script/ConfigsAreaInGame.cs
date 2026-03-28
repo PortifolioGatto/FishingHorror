@@ -5,9 +5,7 @@ using UnityEngine.UI;
 
 public class ConfigsAreaInGame : MonoBehaviour
 {
-    [SerializeField] private GameObject configsMenu;
-
-    [SerializeField] private Slider sensitivitySlider;
+    [SerializeField] private OptionsController optionsController;
 
     [SerializeField] private InputActionReference openConfigsMenuAction;
 
@@ -15,16 +13,6 @@ public class ConfigsAreaInGame : MonoBehaviour
 
     private void Start()
     {
-        sensitivitySlider.onValueChanged.AddListener(value =>
-        {
-            PlayerPrefs.SetFloat(PlayerPrefsSensitivityKey, value);
-            PlayerPrefs.Save();
-
-            InvokeConfigChanged();
-        });
-
-        sensitivitySlider.value = PlayerPrefs.GetFloat(PlayerPrefsSensitivityKey, 0.5f);
-
         openConfigsMenuAction.action.performed += OpenConfigsMenu;
     }
 
@@ -41,9 +29,9 @@ public class ConfigsAreaInGame : MonoBehaviour
 
     public void ToggleConfigsMenu()
     {
-        configsMenu.SetActive(!configsMenu.activeSelf);
+        optionsController.ToggleOptionsMenu();
 
-        if (configsMenu.activeSelf)
+        if (optionsController.optionsMenu.activeSelf)
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
@@ -54,18 +42,9 @@ public class ConfigsAreaInGame : MonoBehaviour
             Cursor.visible = false;
         }
 
-        PlayerCamera.Instance.cameraEnabled = !configsMenu.activeSelf;
+        PlayerCamera.Instance.cameraEnabled = !optionsController.optionsMenu.activeSelf;
 
-        Time.timeScale = configsMenu.activeSelf ? 0f : 1f;
-    }
-
-    private void InvokeConfigChanged()
-    {
-        IListenConfigChanged[] listeners = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.InstanceID).OfType<IListenConfigChanged>().ToArray();
-        foreach (var listener in listeners)
-        {
-            listener.OnConfigChanged();
-        }
+        Time.timeScale = optionsController.optionsMenu.activeSelf ? 0f : 1f;
     }
 }
 
