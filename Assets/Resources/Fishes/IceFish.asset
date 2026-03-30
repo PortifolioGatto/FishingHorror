@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf23ab141c063ba46a314d245d6bc0d5, type: 3}
+  m_Name: IceFish
+  m_EditorClassIdentifier: Assembly-CSharp::FishData
+  fishName:
+    m_TableReference:
+      m_TableCollectionName: GUID:a61aec8fffe28704bb8a6fd487390bcf
+    m_TableEntryReference:
+      m_KeyId: 9013599943983104
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  fishPrefab: {fileID: 1458351960925940423, guid: ac50aed62e2053244a22154bd6e9c56c, type: 3}
+  fishBaseDifficulty: 0.12
+  minTriesToCatch: 1
+  maxTriesToCatch: 1
+  minSizeVariation: 0.5
+  maxSizeVariation: 1
+  maxPrice: 200
+  sizeInBox: 1
+  visualHeightOffset: -1.5
+  canJump: 0
+  canBite: 1
+  oceans: 04000000
+  maxSizeCentimeters: 70
+  maxWeightGrams: 5000
+  references:
+    version: 2
+    RefIds: []

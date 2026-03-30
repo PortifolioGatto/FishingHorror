@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf23ab141c063ba46a314d245d6bc0d5, type: 3}
+  m_Name: ArcticCod
+  m_EditorClassIdentifier: Assembly-CSharp::FishData
+  fishName:
+    m_TableReference:
+      m_TableCollectionName: GUID:a61aec8fffe28704bb8a6fd487390bcf
+    m_TableEntryReference:
+      m_KeyId: 8990800625991680
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  fishPrefab: {fileID: 3585916121577583733, guid: 662353309f8ff7e42a7363a8da693f90, type: 3}
+  fishBaseDifficulty: 0.5
+  minTriesToCatch: 2
+  maxTriesToCatch: 4
+  minSizeVariation: 0.25
+  maxSizeVariation: 0.66
+  maxPrice: 75
+  sizeInBox: 1
+  visualHeightOffset: -1.5
+  canJump: 1
+  canBite: 1
+  oceans: 04000000
+  maxSizeCentimeters: 40
+  maxWeightGrams: 1000
+  references:
+    version: 2
+    RefIds: []

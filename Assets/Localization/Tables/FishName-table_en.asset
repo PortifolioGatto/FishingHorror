@@ -46,6 +46,14 @@ MonoBehaviour:
     m_Localized: Wahoo
     m_Metadata:
       m_Items: []
+  - m_Id: 8990800625991680
+    m_Localized: Arctic Cod
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9013599943983104
+    m_Localized: Icefish
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

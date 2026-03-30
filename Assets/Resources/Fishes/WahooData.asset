@@ -27,7 +27,7 @@ MonoBehaviour:
   maxTriesToCatch: 3
   minSizeVariation: 0.75
   maxSizeVariation: 1.5
-  maxPrice: 100
+  maxPrice: 88
   sizeInBox: 1
   visualHeightOffset: -1.5
   canJump: 1
