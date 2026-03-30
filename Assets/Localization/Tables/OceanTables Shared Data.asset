@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: OceanTables Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: OceanTables
+  m_TableCollectionNameGuidString: 758c405381e255f4992a2a24f752d7c2
+  m_Entries:
+  - m_Id: 45593067520
+    m_Key: PACIFIC_KEY
+    m_Metadata:
+      m_Items: []
+  - m_Id: 101834489856
+    m_Key: ATLANTIC_KEY
+    m_Metadata:
+      m_Items: []
+  - m_Id: 133673451520
+    m_Key: INDIAN_KEY
+    m_Metadata:
+      m_Items: []
+  - m_Id: 149062352896
+    m_Key: SOUTHERN_KEY
+    m_Metadata:
+      m_Items: []
+  - m_Id: 183661166592
+    m_Key: ARCTIC_KEY
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 3701701181376823414
+  references:
+    version: 2
+    RefIds:
+    - rid: 3701701181376823414
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1774815802824

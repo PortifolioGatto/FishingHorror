@@ -9,7 +9,8 @@ public class WorldFish : MonoBehaviour, IInteractable
     {
         Swimming,
         Landed,
-        Caught
+        Caught,
+        JUMPING
     }
 
     public LocalizedString interactionText;
@@ -65,7 +66,7 @@ public class WorldFish : MonoBehaviour, IInteractable
 
     private void Update()
     {
-        if(state == FishState.Landed)
+        if(state == FishState.Landed || state == FishState.JUMPING)
         {
             if(floppingTimer > 0f)
             {
@@ -84,14 +85,18 @@ public class WorldFish : MonoBehaviour, IInteractable
                 
             }
 
-            
-            if(Physics.OverlapSphere(transform.position, 0.5f, waterLayer).Length > 0)
+            if (rb != null && rb.linearVelocity.y > 0f) return;
+
+
+            if (Physics.OverlapSphere(transform.position, 0.5f, waterLayer).Length > 0)
             {
                 AudioManager.Instance.PlaySFX(SPLASH_SFX_NAME, transform.position, 0.5f);
 
                 SetState(FishState.Swimming);
-                if(owner == null)
+                if (owner == null)
                 {
+                    Debug.Log("Entering water", this.gameObject);
+                    transform.DOKill();
                     transform.DOMove(transform.position + Vector3.down * 7f, 1f).onComplete += () =>
                     {
                         Destroy(gameObject);
@@ -99,6 +104,7 @@ public class WorldFish : MonoBehaviour, IInteractable
                 }
             }
         }
+
     }
 
     public void SetState(FishState state)
@@ -107,20 +113,33 @@ public class WorldFish : MonoBehaviour, IInteractable
         switch (state)
         {
             case FishState.Swimming:
-                rb.linearVelocity = Vector3.zero;
+                isJumping = false;
                 rb.isKinematic = true;
                 canInteract = false;
+
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+                rb.angularDamping = 50;
                 break;
             case FishState.Landed:
+                isJumping = false;
                 canInteract = true;
                 rb.isKinematic = false;
                 col.enabled = true;
-                transform.rotation = Quaternion.Euler(0, 0, 90);
+
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+                rb.angularDamping = 50;
                 break;
             case FishState.Caught:
+                isJumping = false;
                 canInteract = false;
                 rb.isKinematic = true;
                 col.enabled = false;
+
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+                rb.angularDamping = 50;
                 break;
         }
     }
@@ -140,6 +159,8 @@ public class WorldFish : MonoBehaviour, IInteractable
 
         AudioManager.Instance.PlaySFX(SPLASH_OUT_SFX_NAME, transform.position, 0.5f);
 
+        SetState(FishState.JUMPING);
+
         StartCoroutine(CheckForWaterOrBoat(cols, colsBoat));
     }
 
@@ -152,7 +173,7 @@ public class WorldFish : MonoBehaviour, IInteractable
     {
         yield return new WaitForSeconds(0.15f); // Wait a moment for the fish to be in the air before checking collisions
 
-        while (true)
+        while (isJumping)
         {
             Quaternion velocityRotation = Quaternion.LookRotation(rb.linearVelocity.normalized, Vector3.up);
             transform.rotation = Quaternion.Slerp(transform.rotation, velocityRotation, Time.deltaTime * 10f);
@@ -168,19 +189,13 @@ public class WorldFish : MonoBehaviour, IInteractable
     
             if (waterHits > 0)
             {
+                Debug.Log("Fish falled water", this.gameObject);
                 transform.SetParent(null);
-                AudioManager.Instance.PlaySFX(SPLASH_SFX_NAME, transform.position, 0.5f);
-                isJumping = false;
-                SetState(FishState.Swimming);
-                yield break;
             }
             else if (boatHits > 0)
             {
-                transform.SetParent(colsBoat[0].transform);
-                AudioManager.Instance.PlaySFX(HIT_BOAT_SFX_NAME, transform.position, 0.5f);
                 Debug.Log("Fish landed on the boat!");
-                isJumping = false;
-                SetState(FishState.Landed);
+                transform.SetParent(colsBoat[0].transform);
                 yield break;
             }
     
@@ -200,7 +215,7 @@ public class WorldFish : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        if(PlayerFishingSystem.Instance != null && !PlayerFishingSystem.Instance.HasCurrentFish())
+        if(PlayerFishingSystem.Instance != null && !PlayerFishingSystem.Instance.HasCurrentFish() && PlayerFishingSystem.Instance.fishingRodEquipped)
         {
             PlayerFishingSystem.Instance.CatchWorldFish(this);
         }
@@ -208,6 +223,11 @@ public class WorldFish : MonoBehaviour, IInteractable
 
     public string GetInteractionText()
     {
-        return interactionText.GetLocalizedString() + fishData.fishName.GetLocalizedString();
+        if (PlayerFishingSystem.Instance == null || PlayerFishingSystem.Instance.HasCurrentFish() || !PlayerFishingSystem.Instance.fishingRodEquipped)
+        {
+            return "";
+        }
+
+        return interactionText.GetLocalizedString() + " " + fishData.fishName.GetLocalizedString();
     }
 }

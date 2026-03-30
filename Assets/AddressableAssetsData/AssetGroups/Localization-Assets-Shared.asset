@@ -20,6 +20,11 @@ MonoBehaviour:
     m_ReadOnly: 1
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 758c405381e255f4992a2a24f752d7c2
+    m_Address: Assets/Localization/Tables/OceanTables Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 80fdb5f04b97b7945aec943d18a1f312
     m_Address: Assets/Localization/Tables/Dialogue2-table Shared Data.asset
     m_ReadOnly: 1
@@ -27,6 +32,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9e5af68498f98d543ab3bed149eec0c9
     m_Address: Assets/Localization/Tables/UI-Table Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9e6fe813e20453e4cb3712d2fb6835b3
+    m_Address: Assets/Localization/Tables/TaskTables Shared Data.asset
     m_ReadOnly: 1
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

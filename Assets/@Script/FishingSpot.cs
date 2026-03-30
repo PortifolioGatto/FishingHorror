@@ -114,6 +114,7 @@ public class FishingSpot : MonoBehaviour
 
         fish.GetComponent<WorldFish>().Initialize(data);
         fish.GetComponent<WorldFish>().InitializeFishingSpot(this);
+        fish.GetComponent<WorldFish>().SetState(WorldFish.FishState.Swimming);
 
         StartCoroutine(VisualFishMovement(fish, data));
 
@@ -188,6 +189,8 @@ public class FishingSpot : MonoBehaviour
 
                 float distance = Vector3.Distance(fish.transform.position, randomPoint);
 
+                Debug.DrawRay(fish.transform.position, direction * distance, Color.orange, 2f);
+
                 if (fish == null) yield break;
 
 
@@ -195,9 +198,16 @@ public class FishingSpot : MonoBehaviour
                 {
                     if(fish == null) yield break;
                     float t = Time.deltaTime / duration;
+
+                    direction = (randomPoint - fish.transform.position).normalized;
+
                     Vector3 newPos = Vector3.Lerp(fish.transform.position, randomPoint, t);
+
+                    targetRotation = Quaternion.LookRotation(direction, Vector3.up);
+
                     fish.transform.position = newPos;
                     fish.transform.rotation = Quaternion.Slerp(fish.transform.rotation, targetRotation, t * 33f);
+                    Debug.Log("Rotating fish", fish.gameObject);
                     yield return null;
                     distance = Vector3.Distance(fish.transform.position, randomPoint);
                 }

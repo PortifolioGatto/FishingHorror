@@ -9,6 +9,7 @@ public class MistEvent_EventController : EventController
 
     [Space]
 
+    [SerializeField] private TaskComponent taskComponentOnEnd;
     [SerializeField] private RadioDialogue dialogue;
     [Space]
     [SerializeField] private GameObject playerBoat;
@@ -130,10 +131,14 @@ public class MistEvent_EventController : EventController
         //    yield return null;
         //}
 
+        taskComponentOnEnd.SelfStartTask();
+
         while (Vector3.Distance(destroyedBoat.transform.position, playerBoat.transform.position) > 70)
         {
             yield return null;
         }
+
+        TaskSystem.instance.DisposeTask();
 
         //Player is checking out the destroyed boat, so we can end the event here
 

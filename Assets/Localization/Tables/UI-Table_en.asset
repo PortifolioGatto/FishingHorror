@@ -54,6 +54,14 @@ MonoBehaviour:
     m_Localized: Target FrameRate
     m_Metadata:
       m_Items: []
+  - m_Id: 8712663434461184
+    m_Localized: Weight
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8712771836248064
+    m_Localized: Size
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

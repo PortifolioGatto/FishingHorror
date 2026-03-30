@@ -1,11 +1,15 @@
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class RadioManager : MonoBehaviour
 {
     public RadioDialogue testDialogue;
 
     public GameObject radioObj;
+
+    [Header("Input")]
+    [SerializeField] private InputActionReference skipTextInput;
 
     [Header("UI")]
     [SerializeField] private GameObject dialoguePanel;
@@ -19,6 +23,7 @@ public class RadioManager : MonoBehaviour
     [Header("Audio")]
     [SerializeField] private AudioSource whiteNoise;
 
+    private bool skipPressed;
 
     public static RadioManager Instance { get; private set; }
 
@@ -27,6 +32,10 @@ public class RadioManager : MonoBehaviour
         Instance = this;
 
         dialoguePanel.SetActive(false);
+
+        skipTextInput.action.Enable();
+        skipTextInput.action.performed += _ => skipPressed = true;
+        skipTextInput.action.canceled += _ => skipPressed = false;
     }
 
 
@@ -53,21 +62,39 @@ public class RadioManager : MonoBehaviour
 
         while (lineIndex < dialogue.dialogueLines.Length)
         {
+            skipPressed = false;
+
             RadioDialogue.DialogueLine line = dialogue.dialogueLines[lineIndex];
 
             if(line.audioClip != null)
             {
                 AudioManager.Instance.PlaySFX(line.audioClip, radioObj.transform.position, 1f, 0f);
-                Debug.Log($"Playing audio clip: {line.audioClip.name}");
             }
 
-            dialogueText.text = (line.name_.GetLocalizedString() == string.Empty) ? "" : line.name_.GetLocalizedString() + ": ";
-            foreach (char c in line.text_.GetLocalizedString())
+            string localizedName = line.name_.GetLocalizedString();
+            string localizedText = line.text_.GetLocalizedString();
+
+            dialogueText.text = (localizedText == string.Empty) ? "" : localizedName + ": ";
+            foreach (char c in localizedText)
             {
                 dialogueText.text += c;
+
+                if(skipPressed)
+                {
+                    dialogueText.text = ((localizedName == string.Empty) ? "" : localizedName + ": ") + localizedText;
+                    break;
+                }
+
                 yield return new WaitForSeconds(typewriterSpeed);
             }
-            yield return new WaitForSeconds((line.delay <= 0 ? 3f : line.delay)); // Wait before showing the next line
+
+            skipPressed = false;
+
+            while (!skipPressed)
+            {
+                yield return null;
+            }
+
             lineIndex++;
         }
 

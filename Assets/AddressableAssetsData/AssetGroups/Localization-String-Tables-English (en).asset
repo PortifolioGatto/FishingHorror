@@ -21,8 +21,20 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-en
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 18620aae01fe0b04593ca6de2f70613f
+    m_Address: OceanTables_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 2e3196028fe0e4d49b8dd6679e976288
     m_Address: FishName-table_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9850971231fed224fa8b236c7b7845c7
+    m_Address: TaskTables_en
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-en

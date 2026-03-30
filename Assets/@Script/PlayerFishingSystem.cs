@@ -56,6 +56,7 @@ public class PlayerFishingSystem : MonoBehaviour
     private int currentFishInIceBox = 0;
 
     public string CurrentFishInIceBox => currentFishInIceBox + "/" + maxFishInIceBox;
+    public string CurrentMoneyInBox => GetMoneyInBox();
 
     [SerializeField] private List<FishInstance> iceBoxContents = new List<FishInstance>();
 
@@ -217,9 +218,22 @@ public class PlayerFishingSystem : MonoBehaviour
         fishingRod.SetHookMode(HookMode.HOLDING_FISH);
 
         currentFishingSpot?.CatchFish(fishData);
+
+        FishDataPaperManager.Instance.ShowFishData(fishInstanced);
     }
 
-   
+    public string GetMoneyInBox()
+    {
+        string money = "$";
+        int amount = 0;
+
+        for (int i = 0; i < iceBoxContents.Count; i++)
+        {
+            amount += iceBoxContents[i].price;
+        }
+
+        return money + amount;
+    }
 
 
     public void SetVisible(bool visible)
@@ -356,6 +370,7 @@ public class PlayerFishingSystem : MonoBehaviour
             AudioManager.Instance.PlaySFX("iceplace", FishIceBox.Instance.transform.position, 0.5f);
         }));
 
+        FishDataPaperManager.Instance.HideFishData(fishingRod.CurrentFish);
 
         fishingRod.DisposeFish();
         fishingRod.ResetHook();

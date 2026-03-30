@@ -32,6 +32,9 @@ MonoBehaviour:
   visualHeightOffset: -2
   canJump: 0
   canBite: 1
+  oceans: 010000000200000000000000
+  maxSizeCentimeters: 330
+  maxWeightGrams: 2300000
   references:
     version: 2
     RefIds: []

@@ -12,7 +12,7 @@ public class FishIceBox : MonoBehaviour, IInteractable
     public bool isHovering { get; set; } = false;
     public bool canInteract { get; set; } = true;
 
-    [SerializeField] private TextMeshPro quantityText;
+    [SerializeField] private TextMeshPro moneyText;
     [Space]
     [SerializeField] private Transform iceBoxLid;
     [SerializeField] private float lidOpenAngle = 90f;
@@ -29,12 +29,15 @@ public class FishIceBox : MonoBehaviour, IInteractable
         Instance = this;
     }
 
+    private void Start()
+    {
+        UpdateMoneyText();
+    }
+
     private void Update()
     {
         if (!waitingTween && !isOpen && isHovering) OpenChestAnimation();
         if (!waitingTween && isOpen && !isHovering) CloseChestAnimation();
-
-        UpdateQuantityText();
     }
 
     public void Interact()
@@ -42,24 +45,26 @@ public class FishIceBox : MonoBehaviour, IInteractable
         if(PlayerFishingSystem.Instance.IsHoldingFish())
         {
             PlayerFishingSystem.Instance.StoreFishInIceBox();
+            UpdateMoneyText();
         }
     }
 
-    public void UpdateQuantityText()
+    public void UpdateMoneyText()
     {
-        quantityText.text = PlayerFishingSystem.Instance.CurrentFishInIceBox;
+        moneyText.text = PlayerFishingSystem.Instance.CurrentMoneyInBox;
     }
 
     public void OnHover()
     {
         isHovering = true;
+        moneyText.gameObject.SetActive(true);
 
         
     }
     public void OnHoverExit()
     {
         isHovering = false;
-
+        moneyText.gameObject.SetActive(false);
 
         
     }
@@ -75,8 +80,8 @@ public class FishIceBox : MonoBehaviour, IInteractable
             isOpen = true;
         };
 
-        quantityText.color = new Color(quantityText.color.r, quantityText.color.g, quantityText.color.b, 0f);
-        quantityText.DOFade(1f, 0.5f).SetEase(Ease.OutQuad);
+        moneyText.color = new Color(moneyText.color.r, moneyText.color.g, moneyText.color.b, 0f);
+        moneyText.DOFade(1f, 0.5f).SetEase(Ease.OutQuad);
 
         AudioManager.Instance.PlaySFX("chestopen", transform.position, 0.5f);
     }
@@ -92,7 +97,7 @@ public class FishIceBox : MonoBehaviour, IInteractable
             isOpen = false;
         };
 
-        quantityText.DOFade(0f, 0.5f).SetEase(Ease.InQuad);
+        moneyText.DOFade(0f, 0.5f).SetEase(Ease.InQuad);
 
 
     }

@@ -21,6 +21,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-pt-BR
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6b0b9190967366542b4db57f17b67562
+    m_Address: TaskTables_pt-BR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-pt-BR
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 807c5189ce73513418dbb7061cfaffd3
     m_Address: Interaction-Table_pt-BR
     m_ReadOnly: 1
@@ -47,6 +53,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d0ff6bff7d3a442428d398480a2aec1b
     m_Address: FishName-table_pt-BR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-pt-BR
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e3e0575dee2f5fe489f484fac28d90d2
+    m_Address: OceanTables_pt-BR
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-pt-BR

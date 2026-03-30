@@ -25,13 +25,16 @@ MonoBehaviour:
   fishBaseDifficulty: 0.3
   minTriesToCatch: 1
   maxTriesToCatch: 2
-  minSizeVariation: 0.75
-  maxSizeVariation: 1.25
+  minSizeVariation: 0.25
+  maxSizeVariation: 0.66
   maxPrice: 100
   sizeInBox: 1
   visualHeightOffset: -0.75
   canJump: 1
   canBite: 1
+  oceans: 0200000000000000
+  maxSizeCentimeters: 18
+  maxWeightGrams: 250
   references:
     version: 2
     RefIds: []
